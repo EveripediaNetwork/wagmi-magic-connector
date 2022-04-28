@@ -145,9 +145,9 @@ export class MagicLinkConnector extends Connector<Options, any> {
   async getUserDetailsByForm(): Promise<UserDetails> {
     this.isModalOpen = true;
 
-    const output: UserDetails = (await createModal(
-      this.isModalOpen
-    )) as UserDetails;
+    const output: UserDetails = (await createModal({
+      isModalOpen: this.isModalOpen,
+    })) as UserDetails;
     return output;
   }
 

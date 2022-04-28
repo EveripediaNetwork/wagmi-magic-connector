@@ -6,7 +6,7 @@ import {
   TwitterLogo,
 } from './logos';
 
-export const createModal = async (isModalOpen: boolean) => {
+export const createModal = async (props: { isModalOpen: boolean }) => {
   // FORM STYLES WITH LINK TAG
   const link = document.createElement('link');
   link.rel = 'stylesheet';
@@ -112,7 +112,7 @@ export const createModal = async (isModalOpen: boolean) => {
     // for close button
     closeButton.addEventListener('click', () => {
       removeForm();
-      isModalOpen = false;
+      props.isModalOpen = false;
       resolve({ email: '', isGoogle: false, isDiscord: false });
     });
 
@@ -126,7 +126,7 @@ export const createModal = async (isModalOpen: boolean) => {
           isDiscord: false,
         };
         removeForm();
-        isModalOpen = false;
+        props.isModalOpen = false;
         resolve(output);
       }
     });
@@ -145,7 +145,7 @@ export const createModal = async (isModalOpen: boolean) => {
           isFacebook: provider.name === 'Facebook',
         };
         removeForm();
-        isModalOpen = false;
+        props.isModalOpen = false;
         resolve(output);
       });
     });
