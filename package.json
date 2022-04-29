@@ -1,6 +1,6 @@
 {
   "name": "@everipedia/wagmi-magic-connector",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "wagmi connector to connect with Magic SDK",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
@@ -50,6 +50,7 @@
   "devDependencies": {
     "@ava/typescript": "^1.1.1",
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@types/react": "^18.0.8",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "ava": "^3.12.1",
