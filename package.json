@@ -1,7 +1,7 @@
 {
   "name": "wagmi-magic-connector",
   "version": "1.0.0",
-  "description": "wagmi connector to connect with magic link",
+  "description": "wagmi connector to connect with Magic SDK",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",

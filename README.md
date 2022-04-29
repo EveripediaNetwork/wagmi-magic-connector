@@ -81,3 +81,11 @@ const connector = new MagicLinkConnector({
 | isDarkMode  | true / false               | (Optional) Makes modal dark mode if true. Default value is false                                   |
 | customLogo  | path_to_logo / url         | (Optional) Makes modal to use the custom logo instead of default magic logo                        |
 | headerText  | string                     | (Optional) Makes modal to use the custom header text instead of default text at the bottom of logo |
+
+# Supported Logins
+
+- [x] Email
+- [ ] SMS
+- [x] Social Logins
+- [ ] WebAuthn
+- [ ] Multifactor Authentication
