@@ -5,7 +5,7 @@
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
-  "repository": "https://github.com/Royal-lobster/wagmi-magic-connector",
+  "repository": "https://github.com/EveripediaNetwork/wagmi-magic-connector",
   "license": "MIT",
   "keywords": [],
   "scripts": {
