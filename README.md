@@ -7,7 +7,7 @@ WAGMI Connector to connect with Magic. Magic is a developer SDK that you can int
 # Usage
 
 ```javascript
-import { MagicLinkConnector } from 'wagmi-magic-connector';
+import { MagicLinkConnector } from '@everipedia/wagmi-magic-connector';
 
 const connector = new MagicLinkConnector({
   options: {
@@ -63,7 +63,7 @@ You can customize the modal's default accent color, logo and header text.
 ## Example
 
 ```javascript
-import { MagicLinkConnector } from 'wagmi-magic-connector';
+import { MagicLinkConnector } from '@everipedia/wagmi-magic-connector';
 
 const connector = new MagicLinkConnector({
   options: {
