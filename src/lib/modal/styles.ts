@@ -51,6 +51,10 @@ export const modalStyles = (accentColor = '#6452f7') => `
     gap: 10px;
     width: 100%;
   }
+  .MagicLink__customLogo{
+    height: 100px;
+    object-fit: contain;
+  }
   .MagicLink__logoText{
     font-size: 20px;
     font-weight: bold;
@@ -112,4 +116,4 @@ export const modalStyles = (accentColor = '#6452f7') => `
     cursor: pointer;
     border-radius: 100px;
   }
-`;
+`

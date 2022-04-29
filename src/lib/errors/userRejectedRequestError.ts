@@ -1,4 +1,4 @@
 export class UserRejectedRequestError extends Error {
-    name = 'UserRejectedRequestError'
-    message = 'User rejected request'
+  name = 'UserRejectedRequestError';
+  message = 'User rejected request';
 }

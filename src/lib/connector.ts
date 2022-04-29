@@ -1,5 +1,9 @@
 import { OAuthExtension } from '@magic-ext/oauth';
-import { InstanceWithExtensions, SDKBase } from '@magic-sdk/provider';
+import {
+  InstanceWithExtensions,
+  MagicSDKAdditionalConfiguration,
+  SDKBase,
+} from '@magic-sdk/provider';
 import { ethers, Signer } from 'ethers';
 import { getAddress } from 'ethers/lib/utils';
 import { Magic } from 'magic-sdk';
@@ -13,10 +17,13 @@ const IS_SERVER = typeof window === 'undefined';
 
 interface Options {
   apiKey: string;
-  customNodeOptions?: {
-    chainId: number;
-    rpcUrl: string;
-  };
+  accentColor?: string;
+  customLogo?: string;
+  customHeaderText?: string;
+  additionalMagicOptions?: MagicSDKAdditionalConfiguration<
+    string,
+    OAuthExtension[]
+  >;
 }
 
 interface UserDetails {
@@ -42,9 +49,18 @@ export class MagicLinkConnector extends Connector<Options, any> {
 
   magicOptions: Options;
 
+  accentColor: string | undefined;
+
+  customLogo: string | undefined;
+
+  customHeaderText: string | undefined;
+
   constructor(config: { chains?: Chain[] | undefined; options: Options }) {
     super(config);
     this.magicOptions = config.options;
+    this.accentColor = config.options.accentColor;
+    this.customLogo = config.options.customLogo;
+    this.customHeaderText = config.options.customHeaderText;
   }
 
   async connect() {
@@ -73,7 +89,6 @@ export class MagicLinkConnector extends Connector<Options, any> {
       }
 
       // open the modal and process the magic login steps
-
       if (!this.isModalOpen) {
         const output = await this.getUserDetailsByForm();
         const magic = await this.getMagicSDK();
@@ -146,8 +161,12 @@ export class MagicLinkConnector extends Connector<Options, any> {
     this.isModalOpen = true;
 
     const output: UserDetails = (await createModal({
-      isModalOpen: this.isModalOpen,
+      accentColor: this.accentColor,
+      customLogo: this.customLogo,
+      customHeaderText: this.customHeaderText,
     })) as UserDetails;
+
+    this.isModalOpen = false;
     return output;
   }
 
@@ -178,7 +197,7 @@ export class MagicLinkConnector extends Connector<Options, any> {
   getMagicSDK(): InstanceWithExtensions<SDKBase, OAuthExtension[]> {
     if (!this.magicSDK) {
       this.magicSDK = new Magic(this.magicOptions.apiKey, {
-        network: this.magicOptions.customNodeOptions,
+        ...this.magicOptions.additionalMagicOptions,
         extensions: [new OAuthExtension()],
       });
       return this.magicSDK;
