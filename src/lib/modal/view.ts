@@ -1,9 +1,18 @@
+import { OAuthProvider } from '@magic-ext/oauth';
+
 import {
-  DiscordLogo,
-  FacebookLogo,
-  GoogleLogo,
+  appleLogo,
+  bitbucketLogo,
+  discordLogo,
+  facebookLogo,
+  githubLogo,
+  gitlabLogo,
+  googleLogo,
+  linkedinLogo,
   MagicLogo,
-  TwitterLogo,
+  microsoftLogo,
+  twitchLogo,
+  twitterLogo,
 } from './logos';
 import { modalStyles } from './styles';
 
@@ -11,6 +20,7 @@ export const createModal = async (props: {
   accentColor?: string;
   customLogo?: string;
   customHeaderText?: string;
+  oauthProviders?: OAuthProvider[];
 }) => {
   // INJECT FORM STYLES
   const style = document.createElement('style');
@@ -92,13 +102,24 @@ export const createModal = async (props: {
   oauthButtonsContainer.classList.add('MagicLink__oauthButtonsContainer');
   formContainer.appendChild(oauthButtonsContainer);
 
-  // OAUTH BUTTONS
+  // PROVIDERS FOR OAUTH BUTTONS
   const providers = [
-    { name: 'Google', icon: GoogleLogo },
-    { name: 'Discord', icon: DiscordLogo },
-    { name: 'Twitter', icon: TwitterLogo },
-    { name: 'Facebook', icon: FacebookLogo },
-  ];
+    { name: 'google', icon: googleLogo },
+    { name: 'facebook', icon: facebookLogo },
+    { name: 'apple', icon: appleLogo },
+    { name: 'github', icon: githubLogo },
+    { name: 'bitbucket', icon: bitbucketLogo },
+    { name: 'gitlab', icon: gitlabLogo },
+    { name: 'linkedin', icon: linkedinLogo },
+    { name: 'twitter', icon: twitterLogo },
+    { name: 'discord', icon: discordLogo },
+    { name: 'twitch', icon: twitchLogo },
+    { name: 'microsoft', icon: microsoftLogo },
+  ].filter((provider) => {
+    return props.oauthProviders?.includes(provider.name as OAuthProvider);
+  });
+
+  // OAUTH BUTTONS
   providers.forEach((provider) => {
     const oauthButton = document.createElement('button');
     oauthButton.classList.add('MagicLink__oauthButton');
@@ -133,8 +154,6 @@ export const createModal = async (props: {
       if (isEmailValid) {
         const output = {
           email: emailInput.value,
-          isGoogle: false,
-          isDiscord: false,
         };
         removeForm();
         resolve(output);
@@ -148,11 +167,7 @@ export const createModal = async (props: {
       );
       oauthButton?.addEventListener('click', () => {
         const output = {
-          email: '',
-          isGoogle: provider.name === 'Google',
-          isDiscord: provider.name === 'Discord',
-          isTwitter: provider.name === 'Twitter',
-          isFacebook: provider.name === 'Facebook',
+          oauthProvider: provider.name as OAuthProvider,
         };
         removeForm();
         resolve(output);

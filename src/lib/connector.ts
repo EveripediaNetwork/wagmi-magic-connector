@@ -1,4 +1,4 @@
-import { OAuthExtension } from '@magic-ext/oauth';
+import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth';
 import {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
@@ -20,6 +20,10 @@ interface Options {
   accentColor?: string;
   customLogo?: string;
   customHeaderText?: string;
+  oauthOptions?: {
+    providers: OAuthProvider[];
+    callbackUrl?: string;
+  };
   additionalMagicOptions?: MagicSDKAdditionalConfiguration<
     string,
     OAuthExtension[]
@@ -28,10 +32,7 @@ interface Options {
 
 interface UserDetails {
   email: string;
-  isGoogle: boolean;
-  isDiscord: boolean;
-  isTwitter: boolean;
-  isFacebook: boolean;
+  oauthProvider: OAuthProvider;
 }
 
 export class MagicLinkConnector extends Connector<Options, any> {
@@ -55,12 +56,18 @@ export class MagicLinkConnector extends Connector<Options, any> {
 
   customHeaderText: string | undefined;
 
+  oauthProviders: OAuthProvider[];
+
+  oauthCallbackUrl: string | undefined;
+
   constructor(config: { chains?: Chain[] | undefined; options: Options }) {
     super(config);
     this.magicOptions = config.options;
     this.accentColor = config.options.accentColor;
     this.customLogo = config.options.customLogo;
     this.customHeaderText = config.options.customHeaderText;
+    this.oauthProviders = config.options.oauthOptions?.providers || [];
+    this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl;
   }
 
   async connect() {
@@ -91,42 +98,18 @@ export class MagicLinkConnector extends Connector<Options, any> {
       // open the modal and process the magic login steps
       if (!this.isModalOpen) {
         const output = await this.getUserDetailsByForm();
-        const magic = await this.getMagicSDK();
+        const magic = this.getMagicSDK();
 
-        // LOGIN WITH MAGIC LINK WITH GOOGLE
-        if (output.isGoogle) {
+        // LOGIN WITH MAGIC LINK WITH OAUTH PROVIDER
+        if (output.oauthProvider) {
           await magic.oauth.loginWithRedirect({
-            provider: 'google',
-            redirectURI: window.location.href,
-          });
-        }
-
-        // LOGIN WITH MAGIC LINK WITH DISCORD
-        if (output.isDiscord) {
-          await magic.oauth.loginWithRedirect({
-            provider: 'discord',
-            redirectURI: window.location.href,
-          });
-        }
-
-        // LOGIN WITH MAGIC LINK WITH TWITTER
-        if (output.isTwitter) {
-          await magic.oauth.loginWithRedirect({
-            provider: 'twitter',
-            redirectURI: window.location.href,
-          });
-        }
-
-        // LOGIN WITH MAGIC LINK WITH FACEBOOK
-        if (output.isFacebook) {
-          await magic.oauth.loginWithRedirect({
-            provider: 'facebook',
-            redirectURI: window.location.href,
+            provider: output.oauthProvider,
+            redirectURI: this.oauthCallbackUrl || window.location.href,
           });
         }
 
         // LOGIN WITH MAGIC LINK WITH EMAIL
-        else if (output.email) {
+        if (output.email) {
           await magic.auth.loginWithMagicLink({
             email: output.email,
           });
@@ -164,6 +147,7 @@ export class MagicLinkConnector extends Connector<Options, any> {
       accentColor: this.accentColor,
       customLogo: this.customLogo,
       customHeaderText: this.customHeaderText,
+      oauthProviders: this.oauthProviders,
     })) as UserDetails;
 
     this.isModalOpen = false;

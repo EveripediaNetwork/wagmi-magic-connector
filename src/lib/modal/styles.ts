@@ -105,9 +105,10 @@ export const modalStyles = (accentColor = '#6452f7') => `
     display: flex;
     flex-direction: row;
     align-items: center;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
-    width: 100%;
+    width: 90%;
   }
   .MagicLink__oauthButton{
     display: block;
@@ -116,4 +117,4 @@ export const modalStyles = (accentColor = '#6452f7') => `
     cursor: pointer;
     border-radius: 100px;
   }
-`
+`;
