@@ -35,14 +35,14 @@ interface UserDetails {
   oauthProvider: OAuthProvider;
 }
 
-export class MagicLinkConnector extends Connector<Options, any> {
+export class MagicLinkConnector extends Connector {
   ready = !IS_SERVER;
 
   readonly id = 'magiclink';
 
   readonly name = 'Magic Link';
 
-  provider: any;
+  provider;
 
   magicSDK: InstanceWithExtensions<SDKBase, OAuthExtension[]> | undefined;
 
