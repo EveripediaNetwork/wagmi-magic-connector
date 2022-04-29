@@ -10,7 +10,6 @@ WAGMI Connector to connect with Magic. Magic is a developer SDK that you can int
 import { MagicLinkConnector } from 'wagmi-magic-connector';
 
 const connector = new MagicLinkConnector({
-  clientId: '<your client id>',
   options: {
     apiKey: YOUR_MAGIC_LINK_API_KEY, //required
     additionalMagicOptions: {
