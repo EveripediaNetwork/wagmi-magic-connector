@@ -53,5 +53,8 @@
   ],
   "prettier": {
     "singleQuote": true
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
