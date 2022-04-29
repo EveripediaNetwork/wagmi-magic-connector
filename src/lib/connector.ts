@@ -18,6 +18,7 @@ const IS_SERVER = typeof window === 'undefined';
 interface Options {
   apiKey: string;
   accentColor?: string;
+  isDarkMode?: boolean;
   customLogo?: string;
   customHeaderText?: string;
   oauthOptions?: {
@@ -52,6 +53,8 @@ export class MagicLinkConnector extends Connector {
 
   accentColor: string | undefined;
 
+  isDarkMode: boolean | undefined;
+
   customLogo: string | undefined;
 
   customHeaderText: string | undefined;
@@ -64,6 +67,7 @@ export class MagicLinkConnector extends Connector {
     super(config);
     this.magicOptions = config.options;
     this.accentColor = config.options.accentColor;
+    this.isDarkMode = config.options.isDarkMode;
     this.customLogo = config.options.customLogo;
     this.customHeaderText = config.options.customHeaderText;
     this.oauthProviders = config.options.oauthOptions?.providers || [];
@@ -145,6 +149,7 @@ export class MagicLinkConnector extends Connector {
 
     const output: UserDetails = (await createModal({
       accentColor: this.accentColor,
+      isDarkMode: this.isDarkMode,
       customLogo: this.customLogo,
       customHeaderText: this.customHeaderText,
       oauthProviders: this.oauthProviders,

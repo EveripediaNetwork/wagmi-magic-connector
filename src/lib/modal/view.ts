@@ -18,13 +18,14 @@ import { modalStyles } from './styles';
 
 export const createModal = async (props: {
   accentColor?: string;
+  isDarkMode?: boolean;
   customLogo?: string;
   customHeaderText?: string;
   oauthProviders?: OAuthProvider[];
 }) => {
   // INJECT FORM STYLES
   const style = document.createElement('style');
-  style.innerHTML = modalStyles(props.accentColor);
+  style.innerHTML = modalStyles(props.accentColor, props.isDarkMode);
   document.head.appendChild(style);
 
   // FORM OVERLAY

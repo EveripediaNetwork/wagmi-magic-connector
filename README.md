@@ -59,6 +59,8 @@ You can provide a callback URL to redirect the user to after authentication. the
 
 You can customize the modal's default accent color, logo and header text.
 
+## Example
+
 ```javascript
 import { MagicLinkConnector } from 'wagmi-magic-connector';
 
@@ -67,13 +69,15 @@ const connector = new MagicLinkConnector({
     apiKey: YOUR_MAGIC_LINK_API_KEY,
     accentColor: '#ff0000',
     customLogo: 'https://example.com/logo.png',
-    headerText: 'My Custom Header Text',
   },
 });
 ```
 
+## API
+
 | Key         | value                      | Description                                                                                        |
 | ----------- | -------------------------- | -------------------------------------------------------------------------------------------------- |
 | accentColor | css color (hex/rgb/etc...) | (Optional) Makes modal to use the custom accentColor instead of default purple                     |
+| isDarkMode  | true / false               | (Optional) Makes modal dark mode if true. Default value is false                                   |
 | customLogo  | path_to_logo / url         | (Optional) Makes modal to use the custom logo instead of default magic logo                        |
 | headerText  | string                     | (Optional) Makes modal to use the custom header text instead of default text at the bottom of logo |

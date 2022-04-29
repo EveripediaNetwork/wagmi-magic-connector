@@ -1,4 +1,4 @@
-export const modalStyles = (accentColor = '#6452f7') => `
+export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
   .MagicLink__formOverlay {
     position: fixed;
@@ -6,7 +6,9 @@ export const modalStyles = (accentColor = '#6452f7') => `
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: ${
+      !isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)'
+    };
     backdrop-filter: blur(6px);
     z-index: 9999;
   }
@@ -14,7 +16,7 @@ export const modalStyles = (accentColor = '#6452f7') => `
     display: flex;
     flex-direction: column;
     font-family: 'Inter', sans-serif;
-    color: black;
+    color: ${!isDarkMode ? 'black' : 'white'};
     text-align: center;
     gap: 30px;
     align-items: center;
@@ -26,7 +28,7 @@ export const modalStyles = (accentColor = '#6452f7') => `
     transform: translate(-50%, -50%);
     width: min(450px, 90%);
     z-index: 9999;
-    background-color: white;
+    background-color: ${!isDarkMode ? 'white' : '#323233'};
     box-shadow: 0 12px 56px rgb(119 118 122 / 15%);
     border-radius: 30px;
     padding: 80px 20px;
@@ -58,7 +60,7 @@ export const modalStyles = (accentColor = '#6452f7') => `
   .MagicLink__logoText{
     font-size: 20px;
     font-weight: bold;
-    color: #333;
+    color: ${!isDarkMode ? '#333' : 'white'};
   }
   .MagicLink__formBody{
     display: flex;
@@ -79,14 +81,16 @@ export const modalStyles = (accentColor = '#6452f7') => `
     max-width: 300px;
     text-align: center;
     margin-bottom: 10px;
-    border: 1px solid #D6D6D6; 
-    color: #333;
+    border-width: 1px;
+    border-color: ${!isDarkMode ? '#D6D6D6' : '#333'};
+    color: ${!isDarkMode ? '#333' : 'white'};
     font-size: 17px;
     font-weight: 400;
     border-radius: 5px;
+    background-color: ${!isDarkMode ? 'white' : '#222'};
   }
   .MagicLink__emailInput::placeholder { 
-    color: #D6D6D6;
+    color: ${!isDarkMode ? '#D6D6D6' : '#555555'};
     opacity: 1; 
   }
   .MagicLink__submitButton {
