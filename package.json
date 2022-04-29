@@ -1,5 +1,5 @@
 {
-  "name": "wagmi-magic-connector",
+  "name": "@everipedia/wagmi-magic-connector",
   "version": "1.0.0",
   "description": "wagmi connector to connect with Magic SDK",
   "main": "build/main/index.js",
