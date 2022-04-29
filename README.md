@@ -20,7 +20,7 @@ const connector = new MagicLinkConnector({
 });
 ```
 
-You can pass magic options to ```aditionalMagicOptions```. Please reffer [Magic Docs](https://magic.link/docs/api-reference/client-side-sdks/web) for more information 
+You can pass magic options to ```aditionalMagicOptions```. Please refer [Magic Docs](https://magic.link/docs/api-reference/client-side-sdks/web) for more information 
 
 # OAuth Configuration
 
