@@ -4,6 +4,15 @@ WAGMI Connector to connect with Magic. Magic is a developer SDK that you can int
 
 ![screely-1651049369339](https://user-images.githubusercontent.com/52039218/165480064-59671e3f-90fb-4387-a408-1055055ad8d3.png)
 
+# Install
+```bash
+npm install @everipedia/wagmi-magic-connector
+``` 
+or 
+```bash
+yarn add @everipedia/wagmi-magic-connector
+```
+
 # Usage
 
 ```javascript
