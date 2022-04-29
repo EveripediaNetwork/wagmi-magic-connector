@@ -36,12 +36,12 @@ interface UserDetails {
   oauthProvider: OAuthProvider;
 }
 
-export class MagicLinkConnector extends Connector {
+export class MagicConnector extends Connector {
   ready = !IS_SERVER;
 
-  readonly id = 'magiclink';
+  readonly id = 'magic';
 
-  readonly name = 'Magic Link';
+  readonly name = 'Magic';
 
   provider;
 

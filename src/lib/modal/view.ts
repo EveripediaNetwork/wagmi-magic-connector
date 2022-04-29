@@ -30,11 +30,11 @@ export const createModal = async (props: {
 
   // FORM OVERLAY
   const overlay = document.createElement('div');
-  overlay.classList.add('MagicLink__formOverlay');
+  overlay.classList.add('Magic__formOverlay');
 
   // FORM CONTAINER
   const formContainer = document.createElement('div');
-  formContainer.classList.add('MagicLink__formContainer');
+  formContainer.classList.add('Magic__formContainer');
   formContainer.style.transform = 'translate(-50%, -50%) scale(0)';
   formContainer.style.transition = 'all 0.2s ease-in-out';
   setTimeout(() => {
@@ -45,46 +45,46 @@ export const createModal = async (props: {
   // FORM CLOSE BUTTON
   const closeButton = document.createElement('button');
   closeButton.innerHTML = '&times;';
-  closeButton.classList.add('MagicLink__closeButton');
+  closeButton.classList.add('Magic__closeButton');
   formContainer.appendChild(closeButton);
 
   // FORM HEADER
   const formHeader = document.createElement('div');
-  formHeader.classList.add('MagicLink__formHeader');
+  formHeader.classList.add('Magic__formHeader');
 
   if (!props.customLogo) {
     const logo = document.createElement('div');
     logo.innerHTML = MagicLogo;
-    logo.classList.add('MagicLink__logo');
+    logo.classList.add('Magic__logo');
     formHeader.appendChild(logo);
   } else {
     const logo = document.createElement('img');
     logo.src = props.customLogo;
-    logo.classList.add('MagicLink__customLogo');
+    logo.classList.add('Magic__customLogo');
     formHeader.appendChild(logo);
   }
   const logoText = document.createElement('h1');
-  logoText.innerHTML = props.customHeaderText || 'Login by Magic Link';
-  logoText.classList.add('MagicLink__logoText');
+  logoText.innerHTML = props.customHeaderText || 'Login with Magic';
+  logoText.classList.add('Magic__logoText');
   formHeader.appendChild(logoText);
   formContainer.appendChild(formHeader);
 
   // FORM BODY
   const formBody = document.createElement('form');
-  formBody.classList.add('MagicLink__formBody');
+  formBody.classList.add('Magic__formBody');
   formBody.onsubmit = async (event) => {
     event.preventDefault();
   };
 
   // FORM EMAIL LABEL
   const emailLabel = document.createElement('label');
-  emailLabel.classList.add('MagicLink__emailLabel');
+  emailLabel.classList.add('Magic__emailLabel');
   emailLabel.innerHTML = 'Sign-in with Email';
   formBody.appendChild(emailLabel);
 
   // FORM EMAIL INPUT
   const emailInput = document.createElement('input');
-  emailInput.classList.add('MagicLink__emailInput');
+  emailInput.classList.add('Magic__emailInput');
   emailInput.setAttribute('required', 'true');
   emailInput.setAttribute('type', 'email');
   emailInput.setAttribute('placeholder', 'address@example.com');
@@ -93,14 +93,14 @@ export const createModal = async (props: {
   // FORM SUBMIT BUTTON
   const submitButton = document.createElement('button');
   submitButton.textContent = 'Send login link';
-  submitButton.classList.add('MagicLink__submitButton');
+  submitButton.classList.add('Magic__submitButton');
   submitButton.type = 'submit';
   formBody.appendChild(submitButton);
   formContainer.appendChild(formBody);
 
   // FORM OAUTH BUTTONS CONTAINER
   const oauthButtonsContainer = document.createElement('div');
-  oauthButtonsContainer.classList.add('MagicLink__oauthButtonsContainer');
+  oauthButtonsContainer.classList.add('Magic__oauthButtonsContainer');
   formContainer.appendChild(oauthButtonsContainer);
 
   // PROVIDERS FOR OAUTH BUTTONS
@@ -123,8 +123,8 @@ export const createModal = async (props: {
   // OAUTH BUTTONS
   providers.forEach((provider) => {
     const oauthButton = document.createElement('button');
-    oauthButton.classList.add('MagicLink__oauthButton');
-    oauthButton.id = `MagicLinkOauth${provider.name}`;
+    oauthButton.classList.add('Magic__oauthButton');
+    oauthButton.id = `MagicOauth${provider.name}`;
     oauthButton.innerHTML = provider.icon;
     oauthButton.setAttribute('data-provider', provider.name);
     oauthButtonsContainer.appendChild(oauthButton);
@@ -163,9 +163,7 @@ export const createModal = async (props: {
 
     // for oauth buttons
     providers.forEach((provider) => {
-      const oauthButton = document.getElementById(
-        `MagicLinkOauth${provider.name}`
-      );
+      const oauthButton = document.getElementById(`MagicOauth${provider.name}`);
       oauthButton?.addEventListener('click', () => {
         const output = {
           oauthProvider: provider.name as OAuthProvider,

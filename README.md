@@ -5,10 +5,13 @@ WAGMI Connector to connect with Magic. Magic is a developer SDK that you can int
 ![screely-1651049369339](https://user-images.githubusercontent.com/52039218/165480064-59671e3f-90fb-4387-a408-1055055ad8d3.png)
 
 # Install
+
 ```bash
 npm install @everipedia/wagmi-magic-connector
-``` 
-or 
+```
+
+or
+
 ```bash
 yarn add @everipedia/wagmi-magic-connector
 ```
@@ -16,9 +19,9 @@ yarn add @everipedia/wagmi-magic-connector
 # Usage
 
 ```javascript
-import { MagicLinkConnector } from '@everipedia/wagmi-magic-connector';
+import { MagicConnector } from '@everipedia/wagmi-magic-connector';
 
-const connector = new MagicLinkConnector({
+const connector = new MagicConnector({
   options: {
     apiKey: YOUR_MAGIC_LINK_API_KEY, //required
     additionalMagicOptions: {
@@ -29,14 +32,14 @@ const connector = new MagicLinkConnector({
 });
 ```
 
-You can pass magic options to ```aditionalMagicOptions```. Please refer [Magic Docs](https://magic.link/docs/api-reference/client-side-sdks/web) for more information 
+You can pass magic options to `aditionalMagicOptions`. Please refer [Magic Docs](https://magic.link/docs/api-reference/client-side-sdks/web) for more information
 
 # OAuth Configuration
 
 You can configure OAuth with magic by adding the following options to the connector:
 
 ```javascript
-const connector = new MagicLinkConnector({
+const connector = new MagicConnector({
   options: {
     apiKey: YOUR_MAGIC_LINK_API_KEY, //required
     oauthOptions : {
@@ -72,9 +75,9 @@ You can customize the modal's default accent color, logo and header text.
 ## Example
 
 ```javascript
-import { MagicLinkConnector } from '@everipedia/wagmi-magic-connector';
+import { MagicConnector } from '@everipedia/wagmi-magic-connector';
 
-const connector = new MagicLinkConnector({
+const connector = new MagicConnector({
   options: {
     apiKey: YOUR_MAGIC_LINK_API_KEY,
     accentColor: '#ff0000',

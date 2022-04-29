@@ -1,6 +1,6 @@
 export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
-  .MagicLink__formOverlay {
+  .Magic__formOverlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -12,7 +12,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     backdrop-filter: blur(6px);
     z-index: 9999;
   }
-  .MagicLink__formContainer {
+  .Magic__formContainer {
     display: flex;
     flex-direction: column;
     font-family: 'Inter', sans-serif;
@@ -33,7 +33,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     border-radius: 30px;
     padding: 80px 20px;
   }
-  .MagicLink__closeButton {
+  .Magic__closeButton {
     position: absolute;
     top: 0;
     right: 15px;
@@ -45,7 +45,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     color: #ccc;
     z-index: 9999;
   }
-  .MagicLink__formHeader{
+  .Magic__formHeader{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,16 +53,16 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     gap: 10px;
     width: 100%;
   }
-  .MagicLink__customLogo{
-    height: 100px;
+  .Magic__customLogo{
+    height: 80px;
     object-fit: contain;
   }
-  .MagicLink__logoText{
+  .Magic__logoText{
     font-size: 20px;
     font-weight: bold;
     color: ${!isDarkMode ? '#333' : 'white'};
   }
-  .MagicLink__formBody{
+  .Magic__formBody{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -71,11 +71,11 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     width: 100%;
     height: 100%;
   }
-  .MagicLink__emailLabel{
+  .Magic__emailLabel{
     font-size: 17px;
     font-weight: 500;
   }
-  .MagicLink__emailInput {
+  .Magic__emailInput {
     padding: 10px;
     width: 100%;
     max-width: 300px;
@@ -89,11 +89,11 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     border-radius: 5px;
     background-color: ${!isDarkMode ? 'white' : '#222'};
   }
-  .MagicLink__emailInput::placeholder { 
+  .Magic__emailInput::placeholder { 
     color: ${!isDarkMode ? '#D6D6D6' : '#555555'};
     opacity: 1; 
   }
-  .MagicLink__submitButton {
+  .Magic__submitButton {
     display: block;
     padding: 8px 30px;
     border: none;
@@ -105,7 +105,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     border-radius: 12px;
     background-color: ${accentColor};
   }
-  .MagicLink__oauthButtonsContainer{
+  .Magic__oauthButtonsContainer{
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -114,7 +114,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     gap: 10px;
     width: 90%;
   }
-  .MagicLink__oauthButton{
+  .Magic__oauthButton{
     display: block;
     padding: 5px;
     border: none;
