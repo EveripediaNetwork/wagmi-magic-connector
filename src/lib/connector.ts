@@ -1,12 +1,13 @@
-import { Chain, Connector } from 'wagmi';
-import { ethers, Signer } from 'ethers';
-import { Magic } from 'magic-sdk';
-import { getAddress } from 'ethers/lib/utils';
 import { OAuthExtension } from '@magic-ext/oauth';
 import { InstanceWithExtensions, SDKBase } from '@magic-sdk/provider';
-import { normalizeChainId } from './utils/normalizeChainId';
+import { ethers, Signer } from 'ethers';
+import { getAddress } from 'ethers/lib/utils';
+import { Magic } from 'magic-sdk';
+import { Chain, Connector } from 'wagmi';
+
 import { UserRejectedRequestError } from './errors/userRejectedRequestError';
-import { createModal } from './modal-ui/modal';
+import { createModal } from './modal/view';
+import { normalizeChainId } from './utils/normalizeChainId';
 
 const IS_SERVER = typeof window === 'undefined';
 
@@ -41,7 +42,6 @@ export class MagicLinkConnector extends Connector<Options, any> {
 
   magicOptions: Options;
 
-  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor(config: { chains?: Chain[] | undefined; options: Options }) {
     super(config);
     this.magicOptions = config.options;

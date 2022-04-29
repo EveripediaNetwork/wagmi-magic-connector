@@ -1,3 +1,4 @@
+export const modalStyles = (accentColor = '#6452f7') => `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
   .MagicLink__formOverlay {
     position: fixed;
@@ -94,7 +95,7 @@
     font-size: 17px;
     font-weight: 500;
     border-radius: 12px;
-    background-color: #6452f7;
+    background-color: ${accentColor};
   }
   .MagicLink__oauthButtonsContainer{
     display: flex;
@@ -111,3 +112,4 @@
     cursor: pointer;
     border-radius: 100px;
   }
+`;
