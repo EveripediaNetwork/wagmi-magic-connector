@@ -24,7 +24,8 @@
   "dependencies": {
     "@magic-ext/oauth": "^2.1.1",
     "@magic-sdk/provider": "^8.1.1",
-    "magic-sdk": "^8.1.1"
+    "magic-sdk": "^8.1.1",
+    "@wagmi/core": "^0.2.2"
   },
   "devDependencies": {
     "@wagmi/core": "^0.2.2",
@@ -42,13 +43,7 @@
     "ts-node": "^9.0.0",
     "typescript": "^4.0.2"
   },
-  "peerDependenciesMeta": {
-    "@wagmi/core": {
-      "optional": true
-    }
-  },
   "peerDependencies": {
-    "@wagmi/core": "^0.2.2",
     "ethers": "^5.6.4"
   },
   "files": [
