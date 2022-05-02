@@ -24,11 +24,11 @@
   "dependencies": {
     "@magic-ext/oauth": "^2.1.1",
     "@magic-sdk/provider": "^8.1.1",
-    "ethers": "^5.6.4",
-    "magic-sdk": "^8.1.1",
-    "wagmi": "^0.3.1"
+    "magic-sdk": "^8.1.1"
   },
   "devDependencies": {
+    "@wagmi/core": "^0.2.2",
+    "ethers": "^5.6.4",
     "@types/react": "^18.0.8",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
@@ -41,6 +41,10 @@
     "prettier": "^2.1.1",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.2"
+  },
+  "peerDependencies": {
+    "@wagmi/core": "^0.2.2",
+    "ethers": "^5.6.4"
   },
   "files": [
     "build/main",

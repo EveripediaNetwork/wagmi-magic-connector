@@ -4,14 +4,17 @@ import {
   MagicSDKAdditionalConfiguration,
   SDKBase,
 } from '@magic-sdk/provider';
+import {
+  Chain,
+  Connector,
+  normalizeChainId,
+  UserRejectedRequestError,
+} from '@wagmi/core';
 import { ethers, Signer } from 'ethers';
 import { getAddress } from 'ethers/lib/utils';
 import { Magic } from 'magic-sdk';
-import { Chain, Connector } from 'wagmi';
 
-import { UserRejectedRequestError } from './errors/userRejectedRequestError';
 import { createModal } from './modal/view';
-import { normalizeChainId } from './utils/normalizeChainId';
 
 const IS_SERVER = typeof window === 'undefined';
 
