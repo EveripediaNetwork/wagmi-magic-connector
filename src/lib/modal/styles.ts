@@ -10,7 +10,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
       !isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)'
     };
     backdrop-filter: blur(6px);
-    z-index: 9999;
+    z-index: 99999999999999999;
   }
   .Magic__formContainer {
     display: flex;
@@ -82,6 +82,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     text-align: center;
     margin-bottom: 10px;
     border-width: 1px;
+    border-style: solid;
     border-color: ${!isDarkMode ? '#D6D6D6' : '#333'};
     color: ${!isDarkMode ? '#333' : 'white'};
     font-size: 17px;
@@ -118,6 +119,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     display: block;
     padding: 5px;
     border: none;
+    background-color: transparent;
     cursor: pointer;
     border-radius: 100px;
   }
