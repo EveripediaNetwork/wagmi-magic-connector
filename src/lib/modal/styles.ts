@@ -10,7 +10,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
       !isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)'
     };
     backdrop-filter: blur(6px);
-    z-index: 99999999999999999;
+    z-index: 2147483647;
   }
   .Magic__formContainer {
     display: flex;
