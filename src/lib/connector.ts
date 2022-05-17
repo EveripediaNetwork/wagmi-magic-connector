@@ -141,7 +141,9 @@ export class MagicConnector extends Connector {
   }
 
   async getAccount(): Promise<string> {
-    const provider = new ethers.providers.Web3Provider(this.getProvider());
+    const provider = new ethers.providers.Web3Provider(
+      await this.getProvider()
+    );
     const signer = provider.getSigner();
     const account = await signer.getAddress();
     return account;
@@ -162,7 +164,7 @@ export class MagicConnector extends Connector {
     return output;
   }
 
-  getProvider() {
+  async getProvider() {
     if (this.provider) {
       return this.provider;
     }
@@ -172,7 +174,9 @@ export class MagicConnector extends Connector {
   }
 
   async getSigner(): Promise<Signer> {
-    const provider = new ethers.providers.Web3Provider(this.getProvider());
+    const provider = new ethers.providers.Web3Provider(
+      await this.getProvider()
+    );
     const signer = await provider.getSigner();
     return signer;
   }
