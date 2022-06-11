@@ -36,6 +36,7 @@ interface Options {
 
 interface UserDetails {
   email: string;
+  phoneNumber: string;
   oauthProvider: OAuthProvider;
 }
 
@@ -119,6 +120,13 @@ export class MagicConnector extends Connector {
         if (output.email) {
           await magic.auth.loginWithMagicLink({
             email: output.email,
+          });
+        }
+
+        // LOGIN WITH MAGIC LINK WITH PHONE NUMBER
+        if (output.phoneNumber) {
+          await magic.auth.loginWithSMS({
+            phoneNumber: output.phoneNumber,
           });
         }
 

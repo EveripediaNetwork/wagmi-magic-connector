@@ -94,6 +94,34 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     color: ${!isDarkMode ? '#D6D6D6' : '#555555'};
     opacity: 1; 
   }
+  .Magic__orLabel{
+    font-size: 17px;
+    font-weight: 500;
+    color: #D6D6D6;
+  }
+  .Magic__smsLabel{
+    font-size: 17px;
+    font-weight: 500;
+  }
+  .Magic__smsInput {
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+    margin-bottom: 10px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: ${!isDarkMode ? '#D6D6D6' : '#333'};
+    color: ${!isDarkMode ? '#333' : 'white'};
+    font-size: 17px;
+    font-weight: 400;
+    border-radius: 5px;
+    background-color: ${!isDarkMode ? 'white' : '#222'};
+  }
+  .Magic__smsInput::placeholder { 
+    color: ${!isDarkMode ? '#D6D6D6' : '#555555'};
+    opacity: 1; 
+  }
   .Magic__submitButton {
     display: block;
     padding: 8px 30px;

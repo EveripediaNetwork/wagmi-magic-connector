@@ -98,7 +98,7 @@ const connector = new MagicConnector({
 # Supported Logins
 
 - [x] Email
-- [ ] SMS
+- [x] SMS
 - [x] Social Logins
 - [ ] WebAuthn
 - [ ] Multifactor Authentication
