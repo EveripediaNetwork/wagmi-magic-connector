@@ -1,4 +1,4 @@
-import { OAuthProvider } from '@magic-ext/oauth';
+import { OAuthProvider } from "@magic-ext/oauth";
 
 import {
   appleLogo,
@@ -13,179 +13,163 @@ import {
   microsoftLogo,
   twitchLogo,
   twitterLogo,
-} from './logos';
-import { modalStyles } from './styles';
+} from "./logos";
+import { modalStyles } from "./styles";
 
 export const createModal = async (props: {
   accentColor?: string;
   isDarkMode?: boolean;
   customLogo?: string;
   customHeaderText?: string;
+  isSMSLoginEnabled?: boolean;
   oauthProviders?: OAuthProvider[];
 }) => {
   // INJECT FORM STYLES
-  const style = document.createElement('style');
+  const style = document.createElement("style");
   style.innerHTML = modalStyles(props.accentColor, props.isDarkMode);
   document.head.appendChild(style);
 
-  // FORM OVERLAY
-  const overlay = document.createElement('div');
-  overlay.classList.add('Magic__formOverlay');
-
-  // FORM CONTAINER
-  const formContainer = document.createElement('div');
-  formContainer.classList.add('Magic__formContainer');
-  formContainer.style.transform = 'translate(-50%, -50%) scale(0)';
-  formContainer.style.transition = 'all 0.2s ease-in-out';
-  setTimeout(() => {
-    formContainer.style.transform = 'translate(-50%, -50%) scale(1)';
-  }, 100);
-  overlay.appendChild(formContainer);
-
-  // FORM CLOSE BUTTON
-  const closeButton = document.createElement('button');
-  closeButton.innerHTML = '&times;';
-  closeButton.classList.add('Magic__closeButton');
-  formContainer.appendChild(closeButton);
-
-  // FORM HEADER
-  const formHeader = document.createElement('div');
-  formHeader.classList.add('Magic__formHeader');
-
-  if (!props.customLogo) {
-    const logo = document.createElement('div');
-    logo.innerHTML = MagicLogo;
-    logo.classList.add('Magic__logo');
-    formHeader.appendChild(logo);
-  } else {
-    const logo = document.createElement('img');
-    logo.src = props.customLogo;
-    logo.classList.add('Magic__customLogo');
-    formHeader.appendChild(logo);
-  }
-  const logoText = document.createElement('h1');
-  logoText.innerHTML = props.customHeaderText || 'Login with Magic';
-  logoText.classList.add('Magic__logoText');
-  formHeader.appendChild(logoText);
-  formContainer.appendChild(formHeader);
-
-  // FORM BODY
-  const formBody = document.createElement('form');
-  formBody.classList.add('Magic__formBody');
-  formBody.onsubmit = async (event) => {
-    event.preventDefault();
-  };
-
-  // FORM EMAIL LABEL
-  const emailLabel = document.createElement('label');
-  emailLabel.classList.add('Magic__emailLabel');
-  emailLabel.innerHTML = 'Sign-in with Email';
-  formBody.appendChild(emailLabel);
-
-  // FORM EMAIL INPUT
-  const emailInput = document.createElement('input');
-  emailInput.classList.add('Magic__emailInput');
-  emailInput.setAttribute('required', 'true');
-  emailInput.setAttribute('type', 'email');
-  emailInput.setAttribute('placeholder', 'address@example.com');
-  formBody.appendChild(emailInput);
-
-  // FORM OR LABEL
-  const orLabel = document.createElement('label');
-  orLabel.classList.add('Magic__orLabel');
-  orLabel.innerHTML = 'or';
-  formBody.appendChild(orLabel);
-
-  // FORM SMS LABEL
-  const smsLabel = document.createElement('label');
-  smsLabel.classList.add('Magic__smsLabel');
-  smsLabel.innerHTML = 'Sign-in with Phone no.';
-  formBody.appendChild(smsLabel);
-
-  // FORM SMS INPUT
-  const smsInput = document.createElement('input');
-  smsInput.classList.add('Magic__smsInput');
-  // smsInput.setAttribute('required', 'false');
-  smsInput.setAttribute('type', 'phoneNumber');
-  smsInput.setAttribute('placeholder', '+1222111234');
-  formBody.appendChild(smsInput);
-
-  // FORM SUBMIT BUTTON
-  const submitButton = document.createElement('button');
-  submitButton.textContent = 'Send login link';
-  submitButton.classList.add('Magic__submitButton');
-  submitButton.type = 'submit';
-  formBody.appendChild(submitButton);
-  formContainer.appendChild(formBody);
-
-  // FORM OAUTH BUTTONS CONTAINER
-  const oauthButtonsContainer = document.createElement('div');
-  oauthButtonsContainer.classList.add('Magic__oauthButtonsContainer');
-  formContainer.appendChild(oauthButtonsContainer);
-
   // PROVIDERS FOR OAUTH BUTTONS
   const providers = [
-    { name: 'google', icon: googleLogo },
-    { name: 'facebook', icon: facebookLogo },
-    { name: 'apple', icon: appleLogo },
-    { name: 'github', icon: githubLogo },
-    { name: 'bitbucket', icon: bitbucketLogo },
-    { name: 'gitlab', icon: gitlabLogo },
-    { name: 'linkedin', icon: linkedinLogo },
-    { name: 'twitter', icon: twitterLogo },
-    { name: 'discord', icon: discordLogo },
-    { name: 'twitch', icon: twitchLogo },
-    { name: 'microsoft', icon: microsoftLogo },
+    { name: "google", icon: googleLogo },
+    { name: "facebook", icon: facebookLogo },
+    { name: "apple", icon: appleLogo },
+    { name: "github", icon: githubLogo },
+    { name: "bitbucket", icon: bitbucketLogo },
+    { name: "gitlab", icon: gitlabLogo },
+    { name: "linkedin", icon: linkedinLogo },
+    { name: "twitter", icon: twitterLogo },
+    { name: "discord", icon: discordLogo },
+    { name: "twitch", icon: twitchLogo },
+    { name: "microsoft", icon: microsoftLogo },
   ].filter((provider) => {
     return props.oauthProviders?.includes(provider.name as OAuthProvider);
   });
 
-  // OAUTH BUTTONS
-  providers.forEach((provider) => {
-    const oauthButton = document.createElement('button');
-    oauthButton.classList.add('Magic__oauthButton');
-    oauthButton.id = `MagicOauth${provider.name}`;
-    oauthButton.innerHTML = provider.icon;
-    oauthButton.setAttribute('data-provider', provider.name);
-    oauthButtonsContainer.appendChild(oauthButton);
-  });
+  // MODAL HTML
+  const modal = `
+    <div class="Magic__formContainer" id="MagicModalBody">
+      <button class="Magic__closeButton" id="MagicCloseBtn">&times;</button>
+      <div class="Magic__formHeader">
+        ${
+          props.customLogo
+            ? `<img src="${props.customLogo} class="Magic__customLogo" />`
+            : `<div class="Magic__logo">${MagicLogo}</div>`
+        }
+        <h1 class='Magic__logoText'> ${
+          props.customHeaderText || "Login with Magic"
+        } </h1>
 
-  // APPEND FORM TO BODY
+        <form class="Magic__formBody" id="MagicEmailForm">
+          <label class="Magic__emailLabel">
+            Sign-in with Email
+          </label>
+          <input class="Magic__emailInput" id="MagicEmailInput" required type="email" placeholder="address@example.com" />
+          <button class="Magic__submitButton" type="submit">
+            Send login link
+          </button>
+        </form>
+
+        ${
+          props.isSMSLoginEnabled
+            ? `
+          <div class="Magic__orLabel">or</div>
+          <form class="Magic__formBody" id="MagicPhoneForm">
+            <label class="Magic__smsLabel">Sign-in with Phone no.</label>
+            <input class="Magic__smsInput" id="MagicSmsInput" required type="tel" placeholder="+1222111234" />
+            <button class="Magic__submitButton" type="submit">
+              Send login SMS
+            </button>
+          </form>
+        `
+            : ``
+        }
+
+        <div class="Magic__oauthButtonsContainer">
+          ${providers
+            .map((provider) => {
+              return `
+                <button class="Magic__oauthButton" id="MagicOauth${provider.name}" data-provider="${provider.name}" >
+                  ${provider.icon}
+                </button>
+              `;
+            })
+            .join("")}
+        </div>
+      </div>
+    </div>
+  `;
+
+  // ADD FORM TO BODY
+  const overlay = document.createElement("div");
+  overlay.classList.add("Magic__formOverlay");
   document.body.appendChild(overlay);
+  overlay.innerHTML = modal;
 
   // FORM SUBMIT HANDLER
   const removeForm = () => {
+    alert("pressed");
     setTimeout(() => {
-      formContainer.style.transform = 'translate(-50%, -50%) scale(0)';
+      const formBody = document.getElementById("MagicModalBody");
+      if (formBody) formBody.style.transform = "translate(-50%, -50%) scale(0)";
     }, 100);
     setTimeout(() => {
       overlay.remove();
     }, 200);
   };
+
   return new Promise((resolve) => {
-    // for close button
-    closeButton.addEventListener('click', () => {
-      removeForm();
-      resolve({ email: '', phoneNumber: '', isGoogle: false, isDiscord: false });
+    // FORM CLOSE BUTTON
+    document.getElementById("MagicCloseBtn")?.addEventListener("click", () => {
+      overlay.remove();
+      resolve({
+        email: "",
+        phoneNumber: "",
+        isGoogle: false,
+        isDiscord: false,
+      });
     });
 
-    // for email submit
-    submitButton.addEventListener('click', () => {
-      const isEmailValid = emailInput.checkValidity();
-      if (isEmailValid) {
-        const output = {
-          email: emailInput.value,
-          phoneNumber: smsInput.value,
-        };
-        removeForm();
-        resolve(output);
-      }
-    });
+    // EMAIL FORM SUBMIT HANDLER
+    document
+      .getElementById("MagicEmailForm")
+      ?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const emailInputField = document.getElementById(
+          "MagicEmailInput"
+        ) as HTMLInputElement;
+        const isEmailValid = emailInputField?.checkValidity();
+        if (isEmailValid) {
+          const output = {
+            email: emailInputField?.value,
+          };
+          removeForm();
+          resolve(output);
+        }
+      });
 
-    // for oauth buttons
+    // SMS FORM SUBMIT HANDLER
+    document
+      .getElementById("MagicPhoneForm")
+      ?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const smsInputField = document.getElementById(
+          "MagicSmsInput"
+        ) as HTMLInputElement;
+        const isPhoneValid = smsInputField?.checkValidity();
+        if (isPhoneValid) {
+          const output = {
+            phoneNumber: smsInputField?.value,
+          };
+          removeForm();
+          resolve(output);
+        }
+      });
+
+    // OAUTH BUTTONS
     providers.forEach((provider) => {
       const oauthButton = document.getElementById(`MagicOauth${provider.name}`);
-      oauthButton?.addEventListener('click', () => {
+      oauthButton?.addEventListener("click", () => {
         const output = {
           oauthProvider: provider.name as OAuthProvider,
         };

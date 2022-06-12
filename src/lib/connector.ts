@@ -1,22 +1,24 @@
-import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth';
+import { OAuthExtension, OAuthProvider } from "@magic-ext/oauth";
 import {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
   SDKBase,
-} from '@magic-sdk/provider';
+} from "@magic-sdk/provider";
+import { RPCProviderModule } from "@magic-sdk/provider/dist/types/modules/rpc-provider";
 import {
   Chain,
   Connector,
   normalizeChainId,
   UserRejectedRequestError,
-} from '@wagmi/core';
-import { ethers, Signer } from 'ethers';
-import { getAddress } from 'ethers/lib/utils';
-import { Magic } from 'magic-sdk';
+} from "@wagmi/core";
+import { ethers, Signer } from "ethers";
+import { getAddress } from "ethers/lib/utils";
+import { Magic } from "magic-sdk";
+import { AbstractProvider } from "web3-core";
 
-import { createModal } from './modal/view';
+import { createModal } from "./modal/view";
 
-const IS_SERVER = typeof window === 'undefined';
+const IS_SERVER = typeof window === "undefined";
 
 interface Options {
   apiKey: string;
@@ -24,6 +26,7 @@ interface Options {
   isDarkMode?: boolean;
   customLogo?: string;
   customHeaderText?: string;
+  enableSMSlogin?: boolean;
   oauthOptions?: {
     providers: OAuthProvider[];
     callbackUrl?: string;
@@ -43,25 +46,17 @@ interface UserDetails {
 export class MagicConnector extends Connector {
   ready = !IS_SERVER;
 
-  readonly id = 'magic';
+  readonly id = "magic";
 
-  readonly name = 'Magic';
+  readonly name = "Magic";
 
-  provider;
+  provider: any;
 
   magicSDK: InstanceWithExtensions<SDKBase, OAuthExtension[]> | undefined;
 
   isModalOpen = false;
 
   magicOptions: Options;
-
-  accentColor: string | undefined;
-
-  isDarkMode: boolean | undefined;
-
-  customLogo: string | undefined;
-
-  customHeaderText: string | undefined;
 
   oauthProviders: OAuthProvider[];
 
@@ -70,10 +65,6 @@ export class MagicConnector extends Connector {
   constructor(config: { chains?: Chain[] | undefined; options: Options }) {
     super(config);
     this.magicOptions = config.options;
-    this.accentColor = config.options.accentColor;
-    this.isDarkMode = config.options.isDarkMode;
-    this.customLogo = config.options.customLogo;
-    this.customHeaderText = config.options.customHeaderText;
     this.oauthProviders = config.options.oauthOptions?.providers || [];
     this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl;
   }
@@ -83,9 +74,9 @@ export class MagicConnector extends Connector {
       const provider = await this.getProvider();
 
       if (provider.on) {
-        provider.on('accountsChanged', this.onAccountsChanged);
-        provider.on('chainChanged', this.onChainChanged);
-        provider.on('disconnect', this.onDisconnect);
+        provider.on("accountsChanged", this.onAccountsChanged);
+        provider.on("chainChanged", this.onChainChanged);
+        provider.on("disconnect", this.onDisconnect);
       }
 
       // Check if there is a user logged in
@@ -142,9 +133,9 @@ export class MagicConnector extends Connector {
           provider,
         };
       }
-      throw new UserRejectedRequestError('User rejected request');
+      throw new UserRejectedRequestError("User rejected request");
     } catch (error) {
-      throw new UserRejectedRequestError();
+      throw new UserRejectedRequestError("Something went wrong");
     }
   }
 
@@ -158,13 +149,12 @@ export class MagicConnector extends Connector {
   }
 
   async getUserDetailsByForm(): Promise<UserDetails> {
-    this.isModalOpen = true;
-
     const output: UserDetails = (await createModal({
-      accentColor: this.accentColor,
-      isDarkMode: this.isDarkMode,
-      customLogo: this.customLogo,
-      customHeaderText: this.customHeaderText,
+      accentColor: this.magicOptions.accentColor,
+      isDarkMode: this.magicOptions.isDarkMode,
+      customLogo: this.magicOptions.customLogo,
+      customHeaderText: this.magicOptions.customHeaderText,
+      isSMSLoginEnabled: this.magicOptions.enableSMSlogin,
       oauthProviders: this.oauthProviders,
     })) as UserDetails;
 
@@ -210,22 +200,22 @@ export class MagicConnector extends Connector {
   }
 
   async getChainId(): Promise<number> {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
 
   protected onAccountsChanged(accounts: string[]): void {
-    if (accounts.length === 0) this.emit('disconnect');
-    else this.emit('change', { account: getAddress(accounts[0]) });
+    if (accounts.length === 0) this.emit("disconnect");
+    else this.emit("change", { account: getAddress(accounts[0]) });
   }
 
   protected onChainChanged(chainId: string | number): void {
     const id = normalizeChainId(chainId);
     const unsupported = this.isChainUnsupported(id);
-    this.emit('change', { chain: { id, unsupported } });
+    this.emit("change", { chain: { id, unsupported } });
   }
 
   protected onDisconnect(): void {
-    this.emit('disconnect');
+    this.emit("disconnect");
   }
 
   async disconnect(): Promise<void> {
