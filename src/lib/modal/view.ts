@@ -74,7 +74,7 @@ export const createModal = async (props: {
                <label class="Magic__FormLabel">Sign-in with Email</label>
                <input class="Magic__formInput" id="MagicFormInput" required type="email" placeholder="address@example.com" />
                `
-              : props.isEmailLoginEnabled
+              : props.isSMSLoginEnabled
               ? `
                 <label class="Magic__FormLabel">Sign-in with Phone</label>
                 <input class="Magic__formInput" id="MagicFormInput" required type="tel" pattern="${phoneNumberRegex}" placeholder="+11234567890" />
@@ -98,7 +98,7 @@ export const createModal = async (props: {
             : ``
         }
         <div class="${
-          !props.isEmailLoginEnabled && !props.isEmailLoginEnabled
+          !props.isEmailLoginEnabled && !props.isSMSLoginEnabled
             ? `Magic__oauthButtonsContainer Magic__aloneOauthContainer`
             : `Magic__oauthButtonsContainer`
         }">
