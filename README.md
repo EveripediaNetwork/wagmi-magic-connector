@@ -9,17 +9,17 @@ WAGMI Connector to connect with Magic. Magic is a developer SDK that you can int
 # Table of Contents
 
 - [⬇️ Install](#-install)
-- [Usage](#usage)
+- [⭐ Usage](#-usage)
 - [🌟 Enable Login by Socials (OAuth)](#-enable-login-by-socials-oauth)
   - [Providers](#providers)
   - [Callback URL](#callback-url)
-- [📲 Enable SMS Authentication](#---enable-sms-authentication)
-- [🎨 Modal Customization](#---modal-customization)
+- [📲 Enable SMS Authentication](#-enable-sms-authentication)
+- [🎨 Modal Customization](#-modal-customization)
 - [📖 API](#---api)
-  - [`options`](#-options-)
-  - [`options.OAuthOptions`](#-optionsoauthoptions-)
-- [🍀 Supported Logins](#---supported-logins)
-- [📚 Additional Resources](#---additional-resources)
+  - [`options`](#options)
+  - [`options.OAuthOptions`](#optionsoauthoptions)
+- [🍀 Supported Logins](#-supported-logins)
+- [📚 Additional Resources](#-additional-resources)
 
 # ⬇ Install
 
