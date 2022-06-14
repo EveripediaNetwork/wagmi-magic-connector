@@ -16,16 +16,18 @@
     "fix:prettier": "prettier \"src/**/*.ts\" --write",
     "fix:lint": "eslint src --ext .ts --fix",
     "watch:build": "tsc -p tsconfig.json -w",
-    "reset-hard": "git clean -dfx && git reset --hard && yarn"
+    "reset-hard": "git clean -dfx && git reset --hard && yarn",
+    "release": "run-p build:* && changeset publish"
   },
   "engines": {
     "node": ">=10"
   },
   "dependencies": {
+    "@changesets/cli": "^2.23.0",
     "@magic-ext/oauth": "^2.1.1",
     "@magic-sdk/provider": "^8.1.1",
-    "magic-sdk": "^8.1.1",
-    "@wagmi/core": "^0.2.2"
+    "@wagmi/core": "^0.2.2",
+    "magic-sdk": "^8.1.1"
   },
   "devDependencies": {
     "@wagmi/core": "^0.2.2",
