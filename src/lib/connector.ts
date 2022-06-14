@@ -24,6 +24,7 @@ interface Options {
   isDarkMode?: boolean;
   customLogo?: string;
   customHeaderText?: string;
+  enableEmailLogin?: boolean;
   enableSMSlogin?: boolean;
   oauthOptions?: {
     providers: OAuthProvider[];
@@ -153,6 +154,7 @@ export class MagicConnector extends Connector {
       customLogo: this.magicOptions.customLogo,
       customHeaderText: this.magicOptions.customHeaderText,
       isSMSLoginEnabled: this.magicOptions.enableSMSlogin,
+      isEmailLoginEnabled: this.magicOptions.enableEmailLogin ?? true,
       oauthProviders: this.oauthProviders,
     })) as UserDetails;
 

@@ -22,6 +22,7 @@ export const createModal = async (props: {
   customLogo?: string;
   customHeaderText?: string;
   isSMSLoginEnabled?: boolean;
+  isEmailLoginEnabled?: boolean;
   oauthProviders?: OAuthProvider[];
 }) => {
   // INJECT FORM STYLES
@@ -63,38 +64,68 @@ export const createModal = async (props: {
 
         <form class="Magic__formBody" id="MagicForm">
           ${
-            props.isSMSLoginEnabled
+            props.isSMSLoginEnabled && props.isEmailLoginEnabled
               ? `
                <label class="Magic__FormLabel">Sign-in with Phone or Email</label>
                <input class="Magic__formInput" id="MagicFormInput" required pattern = "${emailRegex}|${phoneNumberRegex}" placeholder="Phone or Email" />
                `
-              : `
+              : props.isEmailLoginEnabled
+              ? `
                <label class="Magic__FormLabel">Sign-in with Email</label>
                <input class="Magic__formInput" id="MagicFormInput" required type="email" placeholder="address@example.com" />
                `
+              : props.isEmailLoginEnabled
+              ? `
+                <label class="Magic__FormLabel">Sign-in with Phone</label>
+                <input class="Magic__formInput" id="MagicFormInput" required type="tel" pattern="${phoneNumberRegex}" placeholder="+11234567890" />
+              `
+              : ``
           }
-          <button class="Magic__submitButton" type="submit">
-            Send login link
-          </button>
+          ${
+            props.isSMSLoginEnabled || props.isEmailLoginEnabled
+              ? ` <button class="Magic__submitButton" type="submit">
+                Send login link
+              </button>`
+              : ``
+          }
         </form>
         ${
-          providers.length > 0
+          providers.length > 0 &&
+          (props.isSMSLoginEnabled || props.isEmailLoginEnabled)
             ? `<div class="Magic__divider">
         &#9135;&#9135;&#9135; OR &#9135;&#9135;&#9135;
         </div>`
             : ``
         }
-        <div class="Magic__oauthButtonsContainer">
+        <div class="${
+          !props.isEmailLoginEnabled && !props.isEmailLoginEnabled
+            ? `Magic__oauthButtonsContainer Magic__aloneOauthContainer`
+            : `Magic__oauthButtonsContainer`
+        }">
           ${providers
             .map((provider) => {
               return `
-                <button class="Magic__oauthButton" id="MagicOauth${provider.name}" data-provider="${provider.name}" >
-                  ${provider.icon}
+                <button class="Magic__oauthButton" id="MagicOauth${
+                  provider.name
+                }" data-provider="${provider.name}" >
+                  <span class="Magic__oauthButtonIcon">${provider.icon}</span>
+                  ${
+                    !props.isSMSLoginEnabled && !props.isEmailLoginEnabled
+                      ? `<span class="Magic__oauthButtonName">${provider.name}</span>`
+                      : ``
+                  }
                 </button>
               `;
             })
             .join('')}
         </div>
+        ${
+          !props.isEmailLoginEnabled &&
+          !props.isEmailLoginEnabled &&
+          providers.length === 0
+            ? `<div>No Login Methods Configured 😥</div>`
+            : ``
+        }
       </div>
     </div>
   `;
