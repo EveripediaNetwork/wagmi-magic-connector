@@ -97,7 +97,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
   .Magic__divider {
       display: block;
       text-align: center;
-      color: ${!isDarkMode ? '#D6D6D6' : '#333'};
+      color: ${!isDarkMode ? '#D6D6D6' : '#444'};
       font-size: 14px;
   }
   .Magic__submitButton {

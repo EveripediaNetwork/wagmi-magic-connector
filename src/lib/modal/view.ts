@@ -77,9 +77,13 @@ export const createModal = async (props: {
             Send login link
           </button>
         </form>
-        <div class="Magic__divider">
+        ${
+          providers.length > 0
+            ? `<div class="Magic__divider">
         &#9135;&#9135;&#9135; OR &#9135;&#9135;&#9135;
-        </div>
+        </div>`
+            : ``
+        }
         <div class="Magic__oauthButtonsContainer">
           ${providers
             .map((provider) => {

@@ -1,24 +1,22 @@
-import { OAuthExtension, OAuthProvider } from "@magic-ext/oauth";
+import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth';
 import {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
   SDKBase,
-} from "@magic-sdk/provider";
-import { RPCProviderModule } from "@magic-sdk/provider/dist/types/modules/rpc-provider";
+} from '@magic-sdk/provider';
 import {
   Chain,
   Connector,
   normalizeChainId,
   UserRejectedRequestError,
-} from "@wagmi/core";
-import { ethers, Signer } from "ethers";
-import { getAddress } from "ethers/lib/utils";
-import { Magic } from "magic-sdk";
-import { AbstractProvider } from "web3-core";
+} from '@wagmi/core';
+import { ethers, Signer } from 'ethers';
+import { getAddress } from 'ethers/lib/utils';
+import { Magic } from 'magic-sdk';
 
-import { createModal } from "./modal/view";
+import { createModal } from './modal/view';
 
-const IS_SERVER = typeof window === "undefined";
+const IS_SERVER = typeof window === 'undefined';
 
 interface Options {
   apiKey: string;
@@ -46,9 +44,9 @@ interface UserDetails {
 export class MagicConnector extends Connector {
   ready = !IS_SERVER;
 
-  readonly id = "magic";
+  readonly id = 'magic';
 
-  readonly name = "Magic";
+  readonly name = 'Magic';
 
   provider: any;
 
@@ -74,9 +72,9 @@ export class MagicConnector extends Connector {
       const provider = await this.getProvider();
 
       if (provider.on) {
-        provider.on("accountsChanged", this.onAccountsChanged);
-        provider.on("chainChanged", this.onChainChanged);
-        provider.on("disconnect", this.onDisconnect);
+        provider.on('accountsChanged', this.onAccountsChanged);
+        provider.on('chainChanged', this.onChainChanged);
+        provider.on('disconnect', this.onDisconnect);
       }
 
       // Check if there is a user logged in
@@ -133,9 +131,9 @@ export class MagicConnector extends Connector {
           provider,
         };
       }
-      throw new UserRejectedRequestError("User rejected request");
+      throw new UserRejectedRequestError('User rejected request');
     } catch (error) {
-      throw new UserRejectedRequestError("Something went wrong");
+      throw new UserRejectedRequestError('Something went wrong');
     }
   }
 
@@ -200,22 +198,22 @@ export class MagicConnector extends Connector {
   }
 
   async getChainId(): Promise<number> {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   protected onAccountsChanged(accounts: string[]): void {
-    if (accounts.length === 0) this.emit("disconnect");
-    else this.emit("change", { account: getAddress(accounts[0]) });
+    if (accounts.length === 0) this.emit('disconnect');
+    else this.emit('change', { account: getAddress(accounts[0]) });
   }
 
   protected onChainChanged(chainId: string | number): void {
     const id = normalizeChainId(chainId);
     const unsupported = this.isChainUnsupported(id);
-    this.emit("change", { chain: { id, unsupported } });
+    this.emit('change', { chain: { id, unsupported } });
   }
 
   protected onDisconnect(): void {
-    this.emit("disconnect");
+    this.emit('disconnect');
   }
 
   async disconnect(): Promise<void> {
