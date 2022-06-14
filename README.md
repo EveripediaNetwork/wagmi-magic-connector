@@ -2,7 +2,7 @@
 
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/EveripediaNetwork/wagmi-magic-connector?style=flat-square)
 
-WAGMI Connector to connect with Magic. Magic is a developer SDK that you can integrate into your application to enable passwordless authentication using magic links, OTPs, OAuth from third-party services, and more for your web3 App.
+[WAGMI](https://wagmi.sh/) Connector to connect with [Magic](https://magic.link/). Magic is a developer SDK that you can integrate into your application to enable passwordless authentication using magic links, OTPs, OAuth from third-party services, and more for your web3 App.
 
 ![Frame 184 (1)](https://user-images.githubusercontent.com/52039218/173542608-19dd8590-3f06-4026-ab10-f3469b212b19.png)
 
