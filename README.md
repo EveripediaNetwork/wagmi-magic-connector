@@ -103,7 +103,7 @@ You have to enable SMS authentication in your Magic Link account first to make i
 
 # 🎨 Modal Customization
 
-You can customize the modal's default accent color, logo and header text.
+You can customize the modal's theme, default accent color, logo and header text.
 
 ```javascript
 import { MagicConnector } from '@everipedia/wagmi-magic-connector';
@@ -120,6 +120,7 @@ const connector = new MagicConnector({
 ```
 
 check out the [API Section](#API) for more information.
+for complete styling, you can override styles of the modal with ```! important```.
 
 # 📖 API
 
