@@ -59,9 +59,7 @@ export const createModal = async (props: {
             ? `<img src="${props.customLogo} class="Magic__customLogo" />`
             : `<div class="Magic__logo">${MagicLogo}</div>`
         }
-        <h1 class='Magic__logoText'> ${
-          props.customHeaderText || 'Login with Magic'
-        } </h1>
+        <h1 class='Magic__logoText'> ${props.customHeaderText || 'Magic'} </h1>
 
         <form class="Magic__formBody" id="MagicForm">
           ${
