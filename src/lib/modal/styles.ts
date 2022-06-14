@@ -25,7 +25,8 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     overflow: hidden;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0);
+    transition: all 0.2s ease-in-out;
     width: min(450px, 90%);
     z-index: 9999;
     background-color: ${!isDarkMode ? 'white' : '#323233'};
