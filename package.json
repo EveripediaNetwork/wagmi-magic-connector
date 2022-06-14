@@ -17,7 +17,7 @@
     "fix:lint": "eslint src --ext .ts --fix",
     "watch:build": "tsc -p tsconfig.json -w",
     "reset-hard": "git clean -dfx && git reset --hard && yarn",
-    "release": "run-p build:* && changeset publish"
+    "release": "yarn build && changeset publish"
   },
   "engines": {
     "node": ">=10"
