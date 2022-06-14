@@ -2,7 +2,8 @@
 
 WAGMI Connector to connect with Magic. Magic is a developer SDK that you can integrate into your application to enable passwordless authentication using magic links, OTPs, OAuth from third-party services, and more for your web3 App.
 
-![screely-1651049369339](https://user-images.githubusercontent.com/52039218/165480064-59671e3f-90fb-4387-a408-1055055ad8d3.png)
+![Frame 184 (1)](https://user-images.githubusercontent.com/52039218/173542608-19dd8590-3f06-4026-ab10-f3469b212b19.png)
+
 
 # Install
 
