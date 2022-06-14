@@ -1,4 +1,4 @@
-import { OAuthProvider } from "@magic-ext/oauth";
+import { OAuthProvider } from '@magic-ext/oauth';
 
 import {
   appleLogo,
@@ -13,8 +13,8 @@ import {
   microsoftLogo,
   twitchLogo,
   twitterLogo,
-} from "./logos";
-import { modalStyles } from "./styles";
+} from './logos';
+import { modalStyles } from './styles';
 
 export const createModal = async (props: {
   accentColor?: string;
@@ -25,23 +25,23 @@ export const createModal = async (props: {
   oauthProviders?: OAuthProvider[];
 }) => {
   // INJECT FORM STYLES
-  const style = document.createElement("style");
+  const style = document.createElement('style');
   style.innerHTML = modalStyles(props.accentColor, props.isDarkMode);
   document.head.appendChild(style);
 
   // PROVIDERS FOR OAUTH BUTTONS
   const providers = [
-    { name: "google", icon: googleLogo },
-    { name: "facebook", icon: facebookLogo },
-    { name: "apple", icon: appleLogo },
-    { name: "github", icon: githubLogo },
-    { name: "bitbucket", icon: bitbucketLogo },
-    { name: "gitlab", icon: gitlabLogo },
-    { name: "linkedin", icon: linkedinLogo },
-    { name: "twitter", icon: twitterLogo },
-    { name: "discord", icon: discordLogo },
-    { name: "twitch", icon: twitchLogo },
-    { name: "microsoft", icon: microsoftLogo },
+    { name: 'google', icon: googleLogo },
+    { name: 'facebook', icon: facebookLogo },
+    { name: 'apple', icon: appleLogo },
+    { name: 'github', icon: githubLogo },
+    { name: 'bitbucket', icon: bitbucketLogo },
+    { name: 'gitlab', icon: gitlabLogo },
+    { name: 'linkedin', icon: linkedinLogo },
+    { name: 'twitter', icon: twitterLogo },
+    { name: 'discord', icon: discordLogo },
+    { name: 'twitch', icon: twitchLogo },
+    { name: 'microsoft', icon: microsoftLogo },
   ].filter((provider) => {
     return props.oauthProviders?.includes(provider.name as OAuthProvider);
   });
@@ -60,7 +60,7 @@ export const createModal = async (props: {
             : `<div class="Magic__logo">${MagicLogo}</div>`
         }
         <h1 class='Magic__logoText'> ${
-          props.customHeaderText || "Login with Magic"
+          props.customHeaderText || 'Login with Magic'
         } </h1>
 
         <form class="Magic__formBody" id="MagicForm">
@@ -91,24 +91,23 @@ export const createModal = async (props: {
                 </button>
               `;
             })
-            .join("")}
+            .join('')}
         </div>
       </div>
     </div>
   `;
 
   // ADD FORM TO BODY
-  const overlay = document.createElement("div");
-  overlay.classList.add("Magic__formOverlay");
+  const overlay = document.createElement('div');
+  overlay.classList.add('Magic__formOverlay');
   document.body.appendChild(overlay);
   overlay.innerHTML = modal;
 
   // FORM SUBMIT HANDLER
   const removeForm = () => {
-    alert("pressed");
     setTimeout(() => {
-      const formBody = document.getElementById("MagicModalBody");
-      if (formBody) formBody.style.transform = "translate(-50%, -50%) scale(0)";
+      const formBody = document.getElementById('MagicModalBody');
+      if (formBody) formBody.style.transform = 'translate(-50%, -50%) scale(0)';
     }, 100);
     setTimeout(() => {
       overlay.remove();
@@ -117,21 +116,21 @@ export const createModal = async (props: {
 
   return new Promise((resolve) => {
     // FORM CLOSE BUTTON
-    document.getElementById("MagicCloseBtn")?.addEventListener("click", () => {
+    document.getElementById('MagicCloseBtn')?.addEventListener('click', () => {
       overlay.remove();
       resolve({
-        email: "",
-        phoneNumber: "",
+        email: '',
+        phoneNumber: '',
         isGoogle: false,
         isDiscord: false,
       });
     });
 
     // EMAIL FORM SUBMIT HANDLER
-    document.getElementById("MagicForm")?.addEventListener("submit", (e) => {
+    document.getElementById('MagicForm')?.addEventListener('submit', (e) => {
       e.preventDefault();
       const formInputField = document.getElementById(
-        "MagicFormInput"
+        'MagicFormInput'
       ) as HTMLInputElement;
       const isFormValid = formInputField?.checkValidity();
       if (isFormValid) {
@@ -140,12 +139,10 @@ export const createModal = async (props: {
           output = {
             phoneNumber: formInputField?.value,
           };
-          alert("phone");
         } else {
           output = {
             email: formInputField?.value,
           };
-          alert("email");
         }
         removeForm();
         resolve(output);
@@ -155,7 +152,7 @@ export const createModal = async (props: {
     // OAUTH BUTTONS
     providers.forEach((provider) => {
       const oauthButton = document.getElementById(`MagicOauth${provider.name}`);
-      oauthButton?.addEventListener("click", () => {
+      oauthButton?.addEventListener('click', () => {
         const output = {
           oauthProvider: provider.name as OAuthProvider,
         };
