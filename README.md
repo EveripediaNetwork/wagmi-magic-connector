@@ -22,7 +22,7 @@ WAGMI Connector to connect with Magic. Magic is a developer SDK that you can int
 - [📚 Additional Resources](#-additional-resources)
   - [1. Usage with Rainbowkit](#1-usage-with-rainbowkit)
 
-# ⬇ Install
+# ⬇️ Install
 
 ```bash
 npm install @everipedia/wagmi-magic-connector
