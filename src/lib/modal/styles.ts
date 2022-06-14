@@ -1,4 +1,4 @@
-export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
+export const modalStyles = (accentColor = "#6452f7", isDarkMode = false) => `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
   .Magic__formOverlay {
     position: fixed;
@@ -7,7 +7,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     width: 100%;
     height: 100%;
     background-color: ${
-      !isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)'
+      !isDarkMode ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)"
     };
     backdrop-filter: blur(6px);
     z-index: 2147483647;
@@ -16,7 +16,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     display: flex;
     flex-direction: column;
     font-family: 'Inter', sans-serif;
-    color: ${!isDarkMode ? 'black' : 'white'};
+    color: ${!isDarkMode ? "black" : "white"};
     text-align: center;
     gap: 30px;
     align-items: center;
@@ -28,7 +28,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     transform: translate(-50%, -50%);
     width: min(450px, 90%);
     z-index: 9999;
-    background-color: ${!isDarkMode ? 'white' : '#323233'};
+    background-color: ${!isDarkMode ? "white" : "#323233"};
     box-shadow: 0 12px 56px rgb(119 118 122 / 15%);
     border-radius: 30px;
     padding: 80px 20px;
@@ -60,7 +60,7 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
   .Magic__logoText{
     font-size: 20px;
     font-weight: bold;
-    color: ${!isDarkMode ? '#333' : 'white'};
+    color: ${!isDarkMode ? "#333" : "white"};
   }
   .Magic__formBody{
     display: flex;
@@ -71,11 +71,11 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     width: 100%;
     height: 100%;
   }
-  .Magic__emailLabel{
+  .Magic__formLabel{
     font-size: 17px;
     font-weight: 500;
   }
-  .Magic__emailInput {
+  .Magic__formInput {
     padding: 10px;
     width: 100%;
     max-width: 300px;
@@ -83,44 +83,22 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     margin-bottom: 10px;
     border-width: 1px;
     border-style: solid;
-    border-color: ${!isDarkMode ? '#D6D6D6' : '#333'};
-    color: ${!isDarkMode ? '#333' : 'white'};
+    border-color: ${!isDarkMode ? "#D6D6D6" : "#333"};
+    color: ${!isDarkMode ? "#333" : "white"};
     font-size: 17px;
     font-weight: 400;
     border-radius: 5px;
-    background-color: ${!isDarkMode ? 'white' : '#222'};
+    background-color: ${!isDarkMode ? "white" : "#222"};
   }
-  .Magic__emailInput::placeholder { 
-    color: ${!isDarkMode ? '#D6D6D6' : '#555555'};
+  .Magic__formInput::placeholder { 
+    color: ${!isDarkMode ? "#D6D6D6" : "#555555"};
     opacity: 1; 
   }
-  .Magic__orLabel{
-    font-size: 17px;
-    font-weight: 500;
-    color: #D6D6D6;
-  }
-  .Magic__smsLabel{
-    font-size: 17px;
-    font-weight: 500;
-  }
-  .Magic__smsInput {
-    padding: 10px;
-    width: 100%;
-    max-width: 300px;
-    text-align: center;
-    margin-bottom: 10px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: ${!isDarkMode ? '#D6D6D6' : '#333'};
-    color: ${!isDarkMode ? '#333' : 'white'};
-    font-size: 17px;
-    font-weight: 400;
-    border-radius: 5px;
-    background-color: ${!isDarkMode ? 'white' : '#222'};
-  }
-  .Magic__smsInput::placeholder { 
-    color: ${!isDarkMode ? '#D6D6D6' : '#555555'};
-    opacity: 1; 
+  .Magic__divider {
+      display: block;
+      text-align: center;
+      color: ${!isDarkMode ? "#D6D6D6" : "#333"};
+      font-size: 14px;
   }
   .Magic__submitButton {
     display: block;

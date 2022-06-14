@@ -46,6 +46,9 @@ export const createModal = async (props: {
     return props.oauthProviders?.includes(provider.name as OAuthProvider);
   });
 
+  const phoneNumberRegex = `(\\+|00)[0-9]{1,3}[0-9]{4,14}(?:x.+)?$`;
+  const emailRegex = `^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})`;
+
   // MODAL HTML
   const modal = `
     <div class="Magic__formContainer" id="MagicModalBody">
@@ -60,31 +63,25 @@ export const createModal = async (props: {
           props.customHeaderText || "Login with Magic"
         } </h1>
 
-        <form class="Magic__formBody" id="MagicEmailForm">
-          <label class="Magic__emailLabel">
-            Sign-in with Email
-          </label>
-          <input class="Magic__emailInput" id="MagicEmailInput" required type="email" placeholder="address@example.com" />
+        <form class="Magic__formBody" id="MagicForm">
+          ${
+            props.isSMSLoginEnabled
+              ? `
+               <label class="Magic__FormLabel">Sign-in with Phone or Email</label>
+               <input class="Magic__formInput" id="MagicFormInput" required pattern = "${emailRegex}|${phoneNumberRegex}" placeholder="Phone or Email" />
+               `
+              : `
+               <label class="Magic__FormLabel">Sign-in with Email</label>
+               <input class="Magic__formInput" id="MagicFormInput" required type="email" placeholder="address@example.com" />
+               `
+          }
           <button class="Magic__submitButton" type="submit">
             Send login link
           </button>
         </form>
-
-        ${
-          props.isSMSLoginEnabled
-            ? `
-          <div class="Magic__orLabel">or</div>
-          <form class="Magic__formBody" id="MagicPhoneForm">
-            <label class="Magic__smsLabel">Sign-in with Phone no.</label>
-            <input class="Magic__smsInput" id="MagicSmsInput" required type="tel" placeholder="+1222111234" />
-            <button class="Magic__submitButton" type="submit">
-              Send login SMS
-            </button>
-          </form>
-        `
-            : ``
-        }
-
+        <div class="Magic__divider">
+        &#9135;&#9135;&#9135; OR &#9135;&#9135;&#9135;
+        </div>
         <div class="Magic__oauthButtonsContainer">
           ${providers
             .map((provider) => {
@@ -131,40 +128,29 @@ export const createModal = async (props: {
     });
 
     // EMAIL FORM SUBMIT HANDLER
-    document
-      .getElementById("MagicEmailForm")
-      ?.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const emailInputField = document.getElementById(
-          "MagicEmailInput"
-        ) as HTMLInputElement;
-        const isEmailValid = emailInputField?.checkValidity();
-        if (isEmailValid) {
-          const output = {
-            email: emailInputField?.value,
+    document.getElementById("MagicForm")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const formInputField = document.getElementById(
+        "MagicFormInput"
+      ) as HTMLInputElement;
+      const isFormValid = formInputField?.checkValidity();
+      if (isFormValid) {
+        let output;
+        if (RegExp(phoneNumberRegex).test(formInputField.value)) {
+          output = {
+            phoneNumber: formInputField?.value,
           };
-          removeForm();
-          resolve(output);
-        }
-      });
-
-    // SMS FORM SUBMIT HANDLER
-    document
-      .getElementById("MagicPhoneForm")
-      ?.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const smsInputField = document.getElementById(
-          "MagicSmsInput"
-        ) as HTMLInputElement;
-        const isPhoneValid = smsInputField?.checkValidity();
-        if (isPhoneValid) {
-          const output = {
-            phoneNumber: smsInputField?.value,
+          alert("phone");
+        } else {
+          output = {
+            email: formInputField?.value,
           };
-          removeForm();
-          resolve(output);
+          alert("email");
         }
-      });
+        removeForm();
+        resolve(output);
+      }
+    });
 
     // OAUTH BUTTONS
     providers.forEach((provider) => {
