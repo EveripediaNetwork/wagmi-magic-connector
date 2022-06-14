@@ -187,7 +187,7 @@ export const rainbowMagicConnector = ({ chains }: any) => ({
 ```
 
 and import the above file to your application root where you wrap your application with `WagmiConfig` component.
-pass the client prop to the `WagmiConfig` component as shown below:
+pass the ```client``` prop with ```createClient``` instance to the `WagmiConfig` component as shown below:
 
 ```javascript
 // App.tsx
