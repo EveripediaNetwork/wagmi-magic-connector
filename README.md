@@ -86,14 +86,31 @@ const connector = new MagicConnector({
 });
 ```
 
-## API
+> See Full API below for more options
 
-| Key         | value                      | Description                                                                                        |
-| ----------- | -------------------------- | -------------------------------------------------------------------------------------------------- |
-| accentColor | css color (hex/rgb/etc...) | (Optional) Makes modal to use the custom accentColor instead of default purple                     |
-| isDarkMode  | true / false               | (Optional) Makes modal dark mode if true. Default value is false                                   |
-| customLogo  | path_to_logo / url         | (Optional) Makes modal to use the custom logo instead of default magic logo                        |
-| headerText  | string                     | (Optional) Makes modal to use the custom header text instead of default text at the bottom of logo |
+# API
+
+## options
+
+The following can be passed to connector options object:
+
+| Key            | value                      | Description                                                                                           |
+| -------------- | -------------------------- | ----------------------------------------------------------------------------------------------------- |
+| accentColor    | css color (hex/rgb/etc...) | 🎨 (Optional) Makes modal to use the custom accentColor instead of default purple                     |
+| isDarkMode     | true / false               | 🎨 (Optional) Makes modal dark mode if true. Default value is false                                   |
+| customLogo     | path_to_logo / url         | 🎨 (Optional) Makes modal to use the custom logo instead of default magic logo                        |
+| headerText     | string                     | 🎨 (Optional) Makes modal to use the custom header text instead of default text at the bottom of logo |
+| enableSMSLogin | true / false               | 🌟 (Optional) Makes modal to enable SMS login if true. Default value is false                         |
+| OAuthOptions   | object                     | 🌟 (Optional) Makes modal to enable OAuth login according to configuration passed.                    |
+
+## options.OAuthOptions
+
+The following can be passed to options.OAuthOptions object to configure OAuth login:
+
+| Key         | value            | Description                                                                                               |
+| ----------- | ---------------- | --------------------------------------------------------------------------------------------------------- |
+| providers   | array of strings | 🌟 (Required) List of providers to enable. check out all possible providers in OauthOptions section above |
+| callbackUrl | string           | 🌟 (Optional) Callback URL to redirect to after authentication. Default value is current URL.             |
 
 # Supported Logins
 

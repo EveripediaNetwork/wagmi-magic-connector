@@ -24,6 +24,7 @@ interface Options {
   isDarkMode?: boolean;
   customLogo?: string;
   customHeaderText?: string;
+  enableSMSlogin?: boolean;
   oauthOptions?: {
     providers: OAuthProvider[];
     callbackUrl?: string;
@@ -47,21 +48,13 @@ export class MagicConnector extends Connector {
 
   readonly name = 'Magic';
 
-  provider;
+  provider: any;
 
   magicSDK: InstanceWithExtensions<SDKBase, OAuthExtension[]> | undefined;
 
   isModalOpen = false;
 
   magicOptions: Options;
-
-  accentColor: string | undefined;
-
-  isDarkMode: boolean | undefined;
-
-  customLogo: string | undefined;
-
-  customHeaderText: string | undefined;
 
   oauthProviders: OAuthProvider[];
 
@@ -70,10 +63,6 @@ export class MagicConnector extends Connector {
   constructor(config: { chains?: Chain[] | undefined; options: Options }) {
     super(config);
     this.magicOptions = config.options;
-    this.accentColor = config.options.accentColor;
-    this.isDarkMode = config.options.isDarkMode;
-    this.customLogo = config.options.customLogo;
-    this.customHeaderText = config.options.customHeaderText;
     this.oauthProviders = config.options.oauthOptions?.providers || [];
     this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl;
   }
@@ -144,7 +133,7 @@ export class MagicConnector extends Connector {
       }
       throw new UserRejectedRequestError('User rejected request');
     } catch (error) {
-      throw new UserRejectedRequestError();
+      throw new UserRejectedRequestError('Something went wrong');
     }
   }
 
@@ -158,13 +147,12 @@ export class MagicConnector extends Connector {
   }
 
   async getUserDetailsByForm(): Promise<UserDetails> {
-    this.isModalOpen = true;
-
     const output: UserDetails = (await createModal({
-      accentColor: this.accentColor,
-      isDarkMode: this.isDarkMode,
-      customLogo: this.customLogo,
-      customHeaderText: this.customHeaderText,
+      accentColor: this.magicOptions.accentColor,
+      isDarkMode: this.magicOptions.isDarkMode,
+      customLogo: this.magicOptions.customLogo,
+      customHeaderText: this.magicOptions.customHeaderText,
+      isSMSLoginEnabled: this.magicOptions.enableSMSlogin,
       oauthProviders: this.oauthProviders,
     })) as UserDetails;
 

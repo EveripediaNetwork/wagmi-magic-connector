@@ -71,11 +71,11 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     width: 100%;
     height: 100%;
   }
-  .Magic__emailLabel{
+  .Magic__formLabel{
     font-size: 17px;
     font-weight: 500;
   }
-  .Magic__emailInput {
+  .Magic__formInput {
     padding: 10px;
     width: 100%;
     max-width: 300px;
@@ -83,44 +83,22 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     margin-bottom: 10px;
     border-width: 1px;
     border-style: solid;
-    border-color: ${!isDarkMode ? '#D6D6D6' : '#333'};
+    border-color: ${!isDarkMode ? '#D6D6D6' : '#444'};
     color: ${!isDarkMode ? '#333' : 'white'};
     font-size: 17px;
     font-weight: 400;
     border-radius: 5px;
     background-color: ${!isDarkMode ? 'white' : '#222'};
   }
-  .Magic__emailInput::placeholder { 
+  .Magic__formInput::placeholder { 
     color: ${!isDarkMode ? '#D6D6D6' : '#555555'};
     opacity: 1; 
   }
-  .Magic__orLabel{
-    font-size: 17px;
-    font-weight: 500;
-    color: #D6D6D6;
-  }
-  .Magic__smsLabel{
-    font-size: 17px;
-    font-weight: 500;
-  }
-  .Magic__smsInput {
-    padding: 10px;
-    width: 100%;
-    max-width: 300px;
-    text-align: center;
-    margin-bottom: 10px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: ${!isDarkMode ? '#D6D6D6' : '#333'};
-    color: ${!isDarkMode ? '#333' : 'white'};
-    font-size: 17px;
-    font-weight: 400;
-    border-radius: 5px;
-    background-color: ${!isDarkMode ? 'white' : '#222'};
-  }
-  .Magic__smsInput::placeholder { 
-    color: ${!isDarkMode ? '#D6D6D6' : '#555555'};
-    opacity: 1; 
+  .Magic__divider {
+      display: block;
+      text-align: center;
+      color: ${!isDarkMode ? '#D6D6D6' : '#444'};
+      font-size: 14px;
   }
   .Magic__submitButton {
     display: block;
