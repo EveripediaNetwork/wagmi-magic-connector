@@ -6,7 +6,6 @@ WAGMI Connector to connect with Magic. Magic is a developer SDK that you can int
 
 ![Frame 184 (1)](https://user-images.githubusercontent.com/52039218/173542608-19dd8590-3f06-4026-ab10-f3469b212b19.png)
 
-
 # Install
 
 ```bash
@@ -114,6 +113,75 @@ The following can be passed to options.OAuthOptions object to configure OAuth lo
 | ----------- | ---------------- | --------------------------------------------------------------------------------------------------------- |
 | providers   | array of strings | 🌟 (Required) List of providers to enable. check out all possible providers in OauthOptions section above |
 | callbackUrl | string           | 🌟 (Optional) Callback URL to redirect to after authentication. Default value is current URL.             |
+
+# Usage with Rainbow kit
+
+To use the connector with Rainbow kit, create a new file `RainbowMagicConnector.ts` with following contents:
+
+```javascript
+// RainbowMagicConnector.ts
+
+import { MagicConnector } from '@everipedia/wagmi-magic-connector';
+
+export const rainbowMagicConnector = ({ chains }: any) => ({
+  id: 'magic',
+  name: 'Magic',
+  iconUrl: 'https://svgshare.com/i/iJK.svg',
+  iconBackground: '#fff',
+  createConnector: () => {
+    const connector = new MagicConnector({
+      chains: chains,
+      options: {
+        apiKey: 'YOUR_MAGIC_API_KEY',
+        //...Other options (check out full API below)
+      },
+    });
+    return {
+      connector,
+    };
+  },
+});
+```
+
+and import the above file to your application root where you wrap your application with `WagmiConfig` component.
+pass the client prop to the `WagmiConfig` component as shown below:
+
+```javascript
+// App.tsx
+
+// ...
+const { chains, provider, webSocketProvider } =
+  configureChains(YOUR_CHAIN_CONFIG);
+const connectors = connectorsForWallets([
+  {
+    groupName: 'Recommended',
+    wallets: [
+      //... other wallets connectors
+      rainbowMagicConnector({ chains }),
+    ],
+  },
+]);
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider,
+  webSocketProvider,
+});
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider chains={chains}>
+        <Component {...pageProps} />
+      </RainbowKitProvider>
+    </WagmiConfig>
+  );
+}
+export default MyApp;
+```
+
+This procedure might change depending on the version of Rainbow kit you are using so please check the documentation of the Rainbow kit if it is not working.
+
+> 🔎 **Example repository:** https://github.com/Royal-lobster/Rainbowkit-Magic
 
 # Supported Logins
 
