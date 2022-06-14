@@ -155,8 +155,7 @@ The following can be passed to options.OAuthOptions object to configure OAuth lo
 
 # 📚 Additional Resources
 
-<details>
-    <summary>1. Usage with RainbowKit</summary>
+## 1. Usage with RainbowKit
 
 To use the connector with Rainbow kit, create a new file `RainbowMagicConnector.ts` with following contents:
 
@@ -224,5 +223,3 @@ export default MyApp;
 This procedure might change depending on the version of Rainbow kit you are using so please check the documentation of the Rainbow kit if it is not working.
 
 🔎 **Example repository:** https://github.com/Royal-lobster/Rainbowkit-Magic
-
-</details>
