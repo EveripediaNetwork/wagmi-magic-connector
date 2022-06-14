@@ -104,13 +104,14 @@ export const createModal = async (props: {
   overlay.classList.add('Magic__formOverlay');
   document.body.appendChild(overlay);
   overlay.innerHTML = modal;
+  const formBody = document.getElementById('MagicModalBody');
+  setTimeout(() => {
+    if (formBody) formBody.style.transform = 'translate(-50%, -50%) scale(1)';
+  }, 100);
 
   // FORM SUBMIT HANDLER
   const removeForm = () => {
-    setTimeout(() => {
-      const formBody = document.getElementById('MagicModalBody');
-      if (formBody) formBody.style.transform = 'translate(-50%, -50%) scale(0)';
-    }, 100);
+    if (formBody) formBody.style.transform = 'translate(-50%, -50%) scale(0)';
     setTimeout(() => {
       overlay.remove();
     }, 200);
@@ -119,7 +120,7 @@ export const createModal = async (props: {
   return new Promise((resolve) => {
     // FORM CLOSE BUTTON
     document.getElementById('MagicCloseBtn')?.addEventListener('click', () => {
-      overlay.remove();
+      removeForm();
       resolve({
         email: '',
         phoneNumber: '',
