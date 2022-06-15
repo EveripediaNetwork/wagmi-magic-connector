@@ -14,6 +14,7 @@
   - [Providers](#providers)
   - [Callback URL](#callback-url)
 - [📲 Enable SMS Authentication](#-enable-sms-authentication)
+- [📧 Disable Email Authentication](#-disable-email-authentication)
 - [🎨 Modal Customization](#-modal-customization)
 - [📖 API](#---api)
   - [`options`](#options)
@@ -101,6 +102,21 @@ const connector = new MagicConnector({
 
 You have to enable SMS authentication in your Magic Link account first to make it work.
 
+#  📧 Disable Email Authentication
+
+By default Email Authentication is set to true as default. if you wish to remove sending magic links via emails, pass ```enableEmailLogin: false``` in options object as follows :
+
+```javascript
+const connector = new MagicConnector({
+  options: {
+    apiKey: YOUR_MAGIC_LINK_API_KEY, //required
+    enableEmailLogin: false, //optional (default: true)
+    //...Other options
+  },
+});
+```
+  
+
 # 🎨 Modal Customization
 
 You can customize the modal's theme, default accent color, logo and header text.
@@ -135,6 +151,7 @@ The following can be passed to connector options object:
 | customLogo             | path_to_logo / url         | 🎨 (Optional) Makes modal to use the custom logo instead of default magic logo                                                                                                |
 | headerText             | string                     | 🎨 (Optional) Makes modal to use the custom header text instead of default text at the bottom of logo                                                                         |
 | enableSMSLogin         | true / false               | 🌟 (Optional) Makes modal to enable SMS login if true. Default value is false                                                                                                 |
+| enableEmailLogin       | true / false               | 🌟 (Optional) Makes modal to disable Email login if false. Default value is true                                                                                                 |
 | OAuthOptions           | object                     | 🌟 (Optional) Makes modal to enable OAuth login according to configuration passed.                                                                                            |
 | additionalMagicOptions | object                     | 🛠️ (Optional) Pass additional options to Magic constructor (refer [Magic API documentation](https://magic.link/docs/api-reference/client-side-sdks/web#constructor) for more) |
 
