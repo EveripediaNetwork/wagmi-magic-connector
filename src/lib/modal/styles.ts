@@ -130,4 +130,26 @@ export const modalStyles = (accentColor = '#6452f7', isDarkMode = false) => `
     cursor: pointer;
     border-radius: 100px;
   }
+  .Magic__aloneOauthContainer > .Magic__oauthButton{
+    width: 100%;
+    max-width: 300px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+    border: 1px solid ${!isDarkMode ? '#D6D6D6' : '#444'};
+    color: ${!isDarkMode ? '#333' : 'white'};
+  }
+  .Magic__aloneOauthContainer .Magic__oauthButtonIcon > svg{
+    width: 30px;
+    margin-top: 5px;
+  }
+  .Magic__aloneOauthContainer .Magic__oauthButtonName{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px;
+    text-transform: capitalize;
+  }
 `;
