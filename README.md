@@ -8,7 +8,7 @@
 
 # Table of Contents
 
-- [⬇️ Install](#-install)
+- [⬇️ Install](#%EF%B8%8F-install)
 - [⭐ Usage](#-usage)
 - [🌟 Enable Login by Socials (OAuth)](#-enable-login-by-socials-oauth)
   - [Providers](#providers)
