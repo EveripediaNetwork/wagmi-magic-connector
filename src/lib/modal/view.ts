@@ -27,11 +27,11 @@ export const createModal = async (props: {
 }) => {
   // INJECT FORM STYLES
   const style = document.createElement('style');
-  style.innerHTML = modalStyles(props.accentColor, props.isDarkMode);
+  style.innerHTML = modalStyles(props.accentColor);
   document.head.appendChild(style);
 
   // PROVIDERS FOR OAUTH BUTTONS
-  const providers = [
+  const allProviders = [
     { name: 'google', icon: googleLogo },
     { name: 'facebook', icon: facebookLogo },
     { name: 'apple', icon: appleLogo },
@@ -43,16 +43,23 @@ export const createModal = async (props: {
     { name: 'discord', icon: discordLogo },
     { name: 'twitch', icon: twitchLogo },
     { name: 'microsoft', icon: microsoftLogo },
-  ].filter((provider) => {
-    return props.oauthProviders?.includes(provider.name as OAuthProvider);
-  });
+  ];
+
+  // make providers included in oauthProviders
+  const providers = props.oauthProviders
+    ?.map((provider) => {
+      return allProviders.find((p) => p.name === provider);
+    })
+    .filter((p) => p !== undefined);
 
   const phoneNumberRegex = `(\\+|00)[0-9]{1,3}[0-9]{4,14}(?:x.+)?$`;
   const emailRegex = `^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})`;
 
   // MODAL HTML
   const modal = `
-    <div class="Magic__formContainer" id="MagicModalBody">
+    <div class="Magic__formContainer ${
+      props.isDarkMode ? `Magic__dark` : ``
+    }" id="MagicModalBody">
       <button class="Magic__closeButton" id="MagicCloseBtn">&times;</button>
       <div class="Magic__formHeader">
         ${
@@ -90,6 +97,7 @@ export const createModal = async (props: {
           }
         </form>
         ${
+          providers &&
           providers.length > 0 &&
           (props.isSMSLoginEnabled || props.isEmailLoginEnabled)
             ? `<div class="Magic__divider">
@@ -103,15 +111,15 @@ export const createModal = async (props: {
             : `Magic__oauthButtonsContainer`
         }">
           ${providers
-            .map((provider) => {
+            ?.map((provider) => {
               return `
                 <button class="Magic__oauthButton" id="MagicOauth${
-                  provider.name
-                }" data-provider="${provider.name}" >
-                  <span class="Magic__oauthButtonIcon">${provider.icon}</span>
+                  provider?.name
+                }" data-provider="${provider?.name}" >
+                  <span class="Magic__oauthButtonIcon">${provider?.icon}</span>
                   ${
                     !props.isSMSLoginEnabled && !props.isEmailLoginEnabled
-                      ? `<span class="Magic__oauthButtonName">${provider.name}</span>`
+                      ? `<span class="Magic__oauthButtonName">${provider?.name}</span>`
                       : ``
                   }
                 </button>
@@ -122,7 +130,7 @@ export const createModal = async (props: {
         ${
           !props.isEmailLoginEnabled &&
           !props.isEmailLoginEnabled &&
-          providers.length === 0
+          providers?.length === 0
             ? `<div>No Login Methods Configured 😥</div>`
             : ``
         }
@@ -133,6 +141,7 @@ export const createModal = async (props: {
   // ADD FORM TO BODY
   const overlay = document.createElement('div');
   overlay.classList.add('Magic__formOverlay');
+  if (props.isDarkMode) overlay.classList.add('Magic__dark');
   document.body.appendChild(overlay);
   overlay.innerHTML = modal;
   const formBody = document.getElementById('MagicModalBody');
@@ -184,11 +193,13 @@ export const createModal = async (props: {
     });
 
     // OAUTH BUTTONS
-    providers.forEach((provider) => {
-      const oauthButton = document.getElementById(`MagicOauth${provider.name}`);
+    providers?.forEach((provider) => {
+      const oauthButton = document.getElementById(
+        `MagicOauth${provider?.name}`
+      );
       oauthButton?.addEventListener('click', () => {
         const output = {
-          oauthProvider: provider.name as OAuthProvider,
+          oauthProvider: provider?.name as OAuthProvider,
         };
         removeForm();
         resolve(output);
