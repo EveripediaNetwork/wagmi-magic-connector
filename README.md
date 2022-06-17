@@ -1,6 +1,6 @@
 # WAGMI Magic Connector
 
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/EveripediaNetwork/wagmi-magic-connector?style=flat-square) ![GitHub stars](https://img.shields.io/github/stars/EveripediaNetwork/wagmi-magic-connector?style=flat-square)
+![](https://flat.badgen.net/github/release/EveripediaNetwork/wagmi-magic-connector) ![](http://flat.badgen.net/github/tag/EveripediaNetwork/wagmi-magic-connector) ![](http://flat.badgen.net/github/open-issues/EveripediaNetwork/wagmi-magic-connector) ![](http://flat.badgen.net/npm/dt/@everipedia/wagmi-magic-connector) ![](http://flat.badgen.net/packagephobia/publish/@everipedia/wagmi-magic-connector) ![](http://flat.badgen.net/github/stars/EveripediaNetwork/wagmi-magic-connector)
 
 [WAGMI](https://wagmi.sh/) Connector to connect with [Magic](https://magic.link/). Magic is a developer SDK that you can integrate into your application to enable passwordless authentication using magic links, OTPs, OAuth from third-party services, and more for your web3 App.
 
