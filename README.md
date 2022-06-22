@@ -18,7 +18,7 @@
 - [📲 Enable SMS Authentication](#-enable-sms-authentication)
 - [📧 Disable Email Authentication](#-disable-email-authentication)
 - [🎨 Modal Customization](#-modal-customization)
-- [📖 API](#---api)
+- [📖 API](#-api)
   - [`options`](#options)
   - [`options.OAuthOptions`](#optionsoauthoptions)
 - [🍀 Supported Logins](#-supported-logins)
@@ -137,7 +137,7 @@ const connector = new MagicConnector({
 });
 ```
 
-check out the [API Section](#API) for more information.
+check out the [API Section](#-api) for more information.
 for complete styling, you can override styles of the modal with ```! important```.
 
 # 📖 API
