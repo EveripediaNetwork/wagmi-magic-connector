@@ -50,7 +50,7 @@ const connector = new MagicConnector({
 });
 ```
 
-Check out all the available options in the [API Section](#API).
+Check out all the available options in the [API Section](#-api).
 
 # 🌟 Enable Login by Socials (OAuth)
 
