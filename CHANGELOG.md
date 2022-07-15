@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.6.1
+
+### Patch Changes
+
+- 85cc525: Fix Custom header images not working
+
 ## 0.6.0
 
 ### Minor Changes
