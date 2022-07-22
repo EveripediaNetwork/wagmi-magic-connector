@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.6.2
+
+### Patch Changes
+
+- 127b67e: added implementation for getChainId
+
 ## 0.6.1
 
 ### Patch Changes
