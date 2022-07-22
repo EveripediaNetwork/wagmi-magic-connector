@@ -199,8 +199,15 @@ export class MagicConnector extends Connector {
     return this.magicSDK;
   }
 
-  async getChainId(): Promise<number> {
-    throw new Error('Method not implemented.');
+  async getChainId(): Promise<any> {
+    const networkOptions = this.magicOptions.additionalMagicOptions?.network;
+    if (typeof networkOptions === 'object') {
+      const chainID = networkOptions.chainId;
+      if (chainID) {
+        return String(normalizeChainId(chainID));
+      }
+    }
+    throw new Error('Chain ID is not defined');
   }
 
   protected onAccountsChanged(accounts: string[]): void {
