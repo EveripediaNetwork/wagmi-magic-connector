@@ -204,7 +204,7 @@ export class MagicConnector extends Connector {
     if (typeof networkOptions === 'object') {
       const chainID = networkOptions.chainId;
       if (chainID) {
-        return String(normalizeChainId(chainID));
+        return normalizeChainId(chainID);
       }
     }
     throw new Error('Chain ID is not defined');
