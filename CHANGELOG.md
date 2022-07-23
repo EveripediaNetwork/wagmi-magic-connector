@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.6.3
+
+### Patch Changes
+
+- 4288ba5: Prevent changing chainId type from number to string
+
 ## 0.6.2
 
 ### Patch Changes
