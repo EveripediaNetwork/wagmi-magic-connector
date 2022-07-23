@@ -199,7 +199,7 @@ export class MagicConnector extends Connector {
     return this.magicSDK;
   }
 
-  async getChainId(): Promise<any> {
+  async getChainId(): Promise<number> {
     const networkOptions = this.magicOptions.additionalMagicOptions?.network;
     if (typeof networkOptions === 'object') {
       const chainID = networkOptions.chainId;
