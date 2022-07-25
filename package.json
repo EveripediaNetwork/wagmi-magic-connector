@@ -23,31 +23,31 @@
     "node": ">=10"
   },
   "dependencies": {
-    "@changesets/cli": "^2.23.0",
+    "@changesets/cli": "^2.24.0",
     "@magic-ext/oauth": "^2.1.1",
     "@magic-sdk/provider": "^8.1.1",
-    "@wagmi/core": "^0.2.2",
+    "@wagmi/core": "^0.4.9",
     "magic-sdk": "^8.1.1"
   },
   "devDependencies": {
-    "@types/react": "^18.0.8",
-    "@typescript-eslint/eslint-plugin": "^4.0.1",
-    "@typescript-eslint/parser": "^4.0.1",
-    "@wagmi/core": "^0.2.2",
+    "@types/react": "^18.0.15",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
+    "@typescript-eslint/parser": "^5.30.7",
+    "@wagmi/core": "^0.4.9",
     "changeset": "^0.2.6",
-    "cspell": "^4.1.0",
-    "eslint": "^7.8.0",
-    "eslint-config-prettier": "^6.11.0",
+    "cspell": "^6.4.1",
+    "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-import": "^2.22.0",
-    "ethers": "^5.6.4",
+    "eslint-plugin-import": "^2.26.0",
+    "ethers": "^5.6.9",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.1.1",
-    "ts-node": "^9.0.0",
-    "typescript": "^4.0.2"
+    "prettier": "^2.7.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "ethers": "^5.6.4"
+    "ethers": "^5.6.9"
   },
   "files": [
     "build/main",

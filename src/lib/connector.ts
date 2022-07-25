@@ -51,7 +51,7 @@ export class MagicConnector extends Connector {
 
   provider: any;
 
-  magicSDK: InstanceWithExtensions<SDKBase, OAuthExtension[]> | undefined;
+  magicSDK?: InstanceWithExtensions<SDKBase, OAuthExtension[]>;
 
   isModalOpen = false;
 
@@ -59,9 +59,9 @@ export class MagicConnector extends Connector {
 
   oauthProviders: OAuthProvider[];
 
-  oauthCallbackUrl: string | undefined;
+  oauthCallbackUrl?: string;
 
-  constructor(config: { chains?: Chain[] | undefined; options: Options }) {
+  constructor(config: { chains?: Chain[]; options: Options }) {
     super(config);
     this.magicOptions = config.options;
     this.oauthProviders = config.options.oauthOptions?.providers || [];
