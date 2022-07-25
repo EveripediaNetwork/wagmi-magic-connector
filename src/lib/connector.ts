@@ -4,6 +4,7 @@ import {
   MagicSDKAdditionalConfiguration,
   SDKBase,
 } from '@magic-sdk/provider';
+import { RPCProviderModule } from '@magic-sdk/provider/dist/types/modules/rpc-provider';
 import {
   Chain,
   Connector,
@@ -13,6 +14,7 @@ import {
 import { ethers, Signer } from 'ethers';
 import { getAddress } from 'ethers/lib/utils';
 import { Magic } from 'magic-sdk';
+import { AbstractProvider } from 'web3-core';
 
 import { createModal } from './modal/view';
 
@@ -49,9 +51,9 @@ export class MagicConnector extends Connector {
 
   readonly name = 'Magic';
 
-  provider: any;
+  provider: RPCProviderModule & AbstractProvider;
 
-  magicSDK: InstanceWithExtensions<SDKBase, OAuthExtension[]> | undefined;
+  magicSDK?: InstanceWithExtensions<SDKBase, OAuthExtension[]>;
 
   isModalOpen = false;
 
@@ -59,9 +61,9 @@ export class MagicConnector extends Connector {
 
   oauthProviders: OAuthProvider[];
 
-  oauthCallbackUrl: string | undefined;
+  oauthCallbackUrl?: string;
 
-  constructor(config: { chains?: Chain[] | undefined; options: Options }) {
+  constructor(config: { chains?: Chain[]; options: Options }) {
     super(config);
     this.magicOptions = config.options;
     this.oauthProviders = config.options.oauthOptions?.providers || [];
