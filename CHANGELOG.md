@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.6.4
+
+### Patch Changes
+
+- d49c203: updated dependancies to latest versions
+
 ## 0.6.3
 
 ### Patch Changes
