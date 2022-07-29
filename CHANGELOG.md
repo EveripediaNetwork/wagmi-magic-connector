@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.6.5
+
+### Patch Changes
+
+- d5c95eb: updates email regex to take +
+
 ## 0.6.4
 
 ### Patch Changes
