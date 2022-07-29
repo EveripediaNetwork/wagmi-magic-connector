@@ -6,4 +6,8 @@
 
 - **Summary**
 
-- **Other information** (e.g. detailed explanation, stack traces, related issues, suggestions how to fix, links for us to have context, eg. StackOverflow, personal fork, etc.)
+- **Attachments** (e.g. screenshots, logs, source code, etc.)
+
+- **Version** (e.g. 1.0.0)
+  - @everipedia/wagmi-magic-connector version:
+  - wagmi version:
