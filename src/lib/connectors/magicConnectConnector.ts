@@ -19,7 +19,7 @@ interface MagicConnectOptions extends BaseOptions {
     >;
 }
 
-export class MagicAuthConnector extends MagicConnector {
+export class MagicConnectConnector extends MagicConnector {
   magicSDK?: InstanceWithExtensions<SDKBase, ConnectExtension[]>;
 
   additionalMagicOptions: MagicSDKAdditionalConfiguration<
