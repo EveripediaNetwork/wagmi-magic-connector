@@ -1,16 +1,13 @@
-import {OAuthExtension, OAuthProvider} from '@magic-ext/oauth';
-
-import {
-  Chain,
-  Connector,
-  normalizeChainId,
-} from '@wagmi/core';
+import { ConnectExtension } from '@magic-ext/connect';
+import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth';
+import { InstanceWithExtensions, SDKBase } from '@magic-sdk/provider';
+import { RPCProviderModule } from '@magic-sdk/provider/dist/types/modules/rpc-provider';
+import { Chain, Connector, normalizeChainId } from '@wagmi/core';
 import { ethers, Signer } from 'ethers';
 import { getAddress } from 'ethers/lib/utils';
+import { AbstractProvider } from 'web3-core';
 
 import { createModal } from '../modal/view';
-import {InstanceWithExtensions, SDKBase} from "@magic-sdk/provider";
-import {ConnectExtension} from "@magic-ext/connect";
 
 const IS_SERVER = typeof window === 'undefined';
 
@@ -35,7 +32,7 @@ export abstract class MagicConnector extends Connector {
 
   readonly name = 'Magic';
 
-  provider: any;
+  provider: RPCProviderModule & AbstractProvider;
 
   isModalOpen = false;
 
@@ -67,7 +64,7 @@ export abstract class MagicConnector extends Connector {
       customHeaderText: this.magicOptions.customHeaderText,
       enableSMSLogin: enableSMSLogin,
       enableEmailLogin: enableEmailLogin,
-      oauthProviders
+      oauthProviders,
     })) as UserDetails;
 
     this.isModalOpen = false;
@@ -120,6 +117,7 @@ export abstract class MagicConnector extends Connector {
     await magic.user.logout();
   }
 
-  abstract getMagicSDK(): InstanceWithExtensions<SDKBase, OAuthExtension[]> | InstanceWithExtensions<SDKBase, ConnectExtension[]>;
-
+  abstract getMagicSDK():
+    | InstanceWithExtensions<SDKBase, OAuthExtension[]>
+    | InstanceWithExtensions<SDKBase, ConnectExtension[]>;
 }

@@ -1,16 +1,13 @@
-import {OAuthExtension, OAuthProvider} from '@magic-ext/oauth';
+import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth';
 import {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
   SDKBase,
 } from '@magic-sdk/provider';
-import {
-  Chain, normalizeChainId,
-  UserRejectedRequestError,
-} from '@wagmi/core';
+import { Chain, normalizeChainId, UserRejectedRequestError } from '@wagmi/core';
 import { Magic } from 'magic-sdk';
 
-import {MagicOptions, MagicConnector} from "./magicConnector";
+import { MagicConnector, MagicOptions } from './magicConnector';
 
 interface MagicAuthOptions extends MagicOptions {
   enableEmailLogin?: boolean;
@@ -18,11 +15,11 @@ interface MagicAuthOptions extends MagicOptions {
   oauthOptions?: {
     providers: OAuthProvider[];
     callbackUrl?: string;
-  },
+  };
   magicSdkConfiguration?: MagicSDKAdditionalConfiguration<
     string,
     OAuthExtension[]
-    >;
+  >;
 }
 
 export class MagicAuthConnector extends MagicConnector {
@@ -31,7 +28,7 @@ export class MagicAuthConnector extends MagicConnector {
   magicSdkConfiguration: MagicSDKAdditionalConfiguration<
     string,
     OAuthExtension[]
-    >
+  >;
 
   enableSMSLogin: boolean;
 
@@ -77,7 +74,11 @@ export class MagicAuthConnector extends MagicConnector {
 
       // open the modal and process the magic login steps
       if (!this.isModalOpen) {
-        const output = await this.getUserDetailsByForm(this.enableSMSLogin, this.enableEmailLogin, this.oauthProviders);
+        const output = await this.getUserDetailsByForm(
+          this.enableSMSLogin,
+          this.enableEmailLogin,
+          this.oauthProviders
+        );
         const magic = this.getMagicSDK();
 
         // LOGIN WITH MAGIC LINK WITH OAUTH PROVIDER
@@ -123,12 +124,12 @@ export class MagicAuthConnector extends MagicConnector {
   async getChainId(): Promise<number> {
     const networkOptions = this.magicSdkConfiguration?.network;
     if (typeof networkOptions === 'object') {
-    const chainID = networkOptions.chainId;
-    if (chainID) {
-      return normalizeChainId(chainID);
+      const chainID = networkOptions.chainId;
+      if (chainID) {
+        return normalizeChainId(chainID);
+      }
     }
-  }
-  throw new Error('Chain ID is not defined');
+    throw new Error('Chain ID is not defined');
   }
 
   getMagicSDK(): InstanceWithExtensions<SDKBase, OAuthExtension[]> {

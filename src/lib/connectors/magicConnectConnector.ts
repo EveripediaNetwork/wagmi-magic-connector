@@ -1,22 +1,19 @@
+import { ConnectExtension } from '@magic-ext/connect';
 import {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
   SDKBase,
 } from '@magic-sdk/provider';
-import {
-  Chain, normalizeChainId,
-  UserRejectedRequestError,
-} from '@wagmi/core';
+import { Chain, normalizeChainId, UserRejectedRequestError } from '@wagmi/core';
 import { Magic } from 'magic-sdk';
 
-import {MagicOptions, MagicConnector} from "./magicConnector";
-import {ConnectExtension} from "@magic-ext/connect";
+import { MagicConnector, MagicOptions } from './magicConnector';
 
 interface MagicConnectOptions extends MagicOptions {
   magicSdkConfiguration?: MagicSDKAdditionalConfiguration<
     string,
     ConnectExtension[]
-    >;
+  >;
 }
 
 export class MagicConnectConnector extends MagicConnector {
@@ -25,7 +22,7 @@ export class MagicConnectConnector extends MagicConnector {
   magicSdkConfiguration: MagicSDKAdditionalConfiguration<
     string,
     ConnectExtension[]
-    >
+  >;
 
   constructor(config: { chains?: Chain[]; options: MagicConnectOptions }) {
     super(config);
@@ -90,12 +87,12 @@ export class MagicConnectConnector extends MagicConnector {
   async getChainId(): Promise<number> {
     const networkOptions = this.magicSdkConfiguration?.network;
     if (typeof networkOptions === 'object') {
-    const chainID = networkOptions.chainId;
-    if (chainID) {
-      return normalizeChainId(chainID);
+      const chainID = networkOptions.chainId;
+      if (chainID) {
+        return normalizeChainId(chainID);
+      }
     }
-  }
-  throw new Error('Chain ID is not defined');
+    throw new Error('Chain ID is not defined');
   }
 
   getMagicSDK(): InstanceWithExtensions<SDKBase, ConnectExtension[]> {
