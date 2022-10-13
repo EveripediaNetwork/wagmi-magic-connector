@@ -14,18 +14,12 @@ import {ConnectExtension} from "@magic-ext/connect";
 
 const IS_SERVER = typeof window === 'undefined';
 
-export interface BaseOptions {
+export interface MagicOptions {
   apiKey: string;
   accentColor?: string;
   isDarkMode?: boolean;
   customLogo?: string;
   customHeaderText?: string;
-  enableEmailLogin?: boolean;
-  enableSMSLogin?: boolean;
-  oauthOptions?: {
-    providers: OAuthProvider[];
-    callbackUrl?: string;
-  };
 }
 
 interface UserDetails {
@@ -45,17 +39,11 @@ export abstract class MagicConnector extends Connector {
 
   isModalOpen = false;
 
-  magicOptions: BaseOptions;
+  magicOptions: MagicOptions;
 
-  oauthProviders: OAuthProvider[];
-
-  oauthCallbackUrl?: string;
-
-  protected constructor(config: { chains?: Chain[]; options: BaseOptions }) {
+  protected constructor(config: { chains?: Chain[]; options: MagicOptions }) {
     super(config);
     this.magicOptions = config.options;
-    this.oauthProviders = config.options.oauthOptions?.providers || [];
-    this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl;
   }
 
   async getAccount(): Promise<string> {
@@ -67,15 +55,19 @@ export abstract class MagicConnector extends Connector {
     return account;
   }
 
-  async getUserDetailsByForm(): Promise<UserDetails> {
+  async getUserDetailsByForm(
+    enableSMSLogin: boolean,
+    enableEmailLogin: boolean,
+    oauthProviders: OAuthProvider[]
+  ): Promise<UserDetails> {
     const output: UserDetails = (await createModal({
       accentColor: this.magicOptions.accentColor,
       isDarkMode: this.magicOptions.isDarkMode,
       customLogo: this.magicOptions.customLogo,
       customHeaderText: this.magicOptions.customHeaderText,
-      isSMSLoginEnabled: this.magicOptions.enableSMSLogin,
-      isEmailLoginEnabled: this.magicOptions.enableEmailLogin ?? true,
-      oauthProviders: this.oauthProviders,
+      enableSMSLogin: enableSMSLogin,
+      enableEmailLogin: enableEmailLogin,
+      oauthProviders
     })) as UserDetails;
 
     this.isModalOpen = false;

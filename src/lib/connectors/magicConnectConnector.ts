@@ -9,11 +9,11 @@ import {
 } from '@wagmi/core';
 import { Magic } from 'magic-sdk';
 
-import {BaseOptions, MagicConnector} from "./magicConnector";
+import {MagicOptions, MagicConnector} from "./magicConnector";
 import {ConnectExtension} from "@magic-ext/connect";
 
-interface MagicConnectOptions extends BaseOptions {
-  additionalMagicOptions?: MagicSDKAdditionalConfiguration<
+interface MagicConnectOptions extends MagicOptions {
+  magicSdkConfiguration?: MagicSDKAdditionalConfiguration<
     string,
     ConnectExtension[]
     >;
@@ -22,14 +22,14 @@ interface MagicConnectOptions extends BaseOptions {
 export class MagicConnectConnector extends MagicConnector {
   magicSDK?: InstanceWithExtensions<SDKBase, ConnectExtension[]>;
 
-  additionalMagicOptions: MagicSDKAdditionalConfiguration<
+  magicSdkConfiguration: MagicSDKAdditionalConfiguration<
     string,
     ConnectExtension[]
     >
 
   constructor(config: { chains?: Chain[]; options: MagicConnectOptions }) {
     super(config);
-    this.additionalMagicOptions = config.options.additionalMagicOptions;
+    this.magicSdkConfiguration = config.options.magicSdkConfiguration;
   }
 
   async connect() {
@@ -59,16 +59,8 @@ export class MagicConnectConnector extends MagicConnector {
 
       // open the modal and process the magic login steps
       if (!this.isModalOpen) {
-        const output = await this.getUserDetailsByForm();
+        const output = await this.getUserDetailsByForm(false, true, []);
         const magic = this.getMagicSDK();
-
-        // LOGIN WITH MAGIC LINK WITH OAUTH PROVIDER
-        /*if (output.oauthProvider) {
-          await magic.oauth.loginWithRedirect({
-            provider: output.oauthProvider,
-            redirectURI: this.oauthCallbackUrl || window.location.href,
-          });
-        }*/
 
         // LOGIN WITH MAGIC LINK WITH EMAIL
         if (output.email) {
@@ -96,7 +88,7 @@ export class MagicConnectConnector extends MagicConnector {
   }
 
   async getChainId(): Promise<number> {
-    const networkOptions = this.additionalMagicOptions?.network;
+    const networkOptions = this.magicSdkConfiguration?.network;
     if (typeof networkOptions === 'object') {
     const chainID = networkOptions.chainId;
     if (chainID) {
@@ -109,7 +101,7 @@ export class MagicConnectConnector extends MagicConnector {
   getMagicSDK(): InstanceWithExtensions<SDKBase, ConnectExtension[]> {
     if (!this.magicSDK) {
       this.magicSDK = new Magic(this.magicOptions.apiKey, {
-        ...this.additionalMagicOptions,
+        ...this.magicSdkConfiguration,
         extensions: [new ConnectExtension()],
       });
       return this.magicSDK;

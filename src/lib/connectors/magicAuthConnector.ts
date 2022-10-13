@@ -1,4 +1,4 @@
-import { OAuthExtension } from '@magic-ext/oauth';
+import {OAuthExtension, OAuthProvider} from '@magic-ext/oauth';
 import {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
@@ -10,10 +10,16 @@ import {
 } from '@wagmi/core';
 import { Magic } from 'magic-sdk';
 
-import {BaseOptions, MagicConnector} from "./magicConnector";
+import {MagicOptions, MagicConnector} from "./magicConnector";
 
-interface MagicAuthOptions extends BaseOptions {
-  additionalMagicOptions?: MagicSDKAdditionalConfiguration<
+interface MagicAuthOptions extends MagicOptions {
+  enableEmailLogin?: boolean;
+  enableSMSLogin?: boolean;
+  oauthOptions?: {
+    providers: OAuthProvider[];
+    callbackUrl?: string;
+  },
+  magicSdkConfiguration?: MagicSDKAdditionalConfiguration<
     string,
     OAuthExtension[]
     >;
@@ -22,14 +28,26 @@ interface MagicAuthOptions extends BaseOptions {
 export class MagicAuthConnector extends MagicConnector {
   magicSDK?: InstanceWithExtensions<SDKBase, OAuthExtension[]>;
 
-  additionalMagicOptions: MagicSDKAdditionalConfiguration<
+  magicSdkConfiguration: MagicSDKAdditionalConfiguration<
     string,
     OAuthExtension[]
     >
 
+  enableSMSLogin: boolean;
+
+  enableEmailLogin: boolean;
+
+  oauthProviders: OAuthProvider[];
+
+  oauthCallbackUrl?: string;
+
   constructor(config: { chains?: Chain[]; options: MagicAuthOptions }) {
     super(config);
-    this.additionalMagicOptions = config.options.additionalMagicOptions;
+    this.magicSdkConfiguration = config.options.magicSdkConfiguration;
+    this.oauthProviders = config.options.oauthOptions?.providers || [];
+    this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl;
+    this.enableSMSLogin = config.options.enableSMSLogin;
+    this.enableEmailLogin = config.options.enableEmailLogin;
   }
 
   async connect() {
@@ -59,7 +77,7 @@ export class MagicAuthConnector extends MagicConnector {
 
       // open the modal and process the magic login steps
       if (!this.isModalOpen) {
-        const output = await this.getUserDetailsByForm();
+        const output = await this.getUserDetailsByForm(this.enableSMSLogin, this.enableEmailLogin, this.oauthProviders);
         const magic = this.getMagicSDK();
 
         // LOGIN WITH MAGIC LINK WITH OAUTH PROVIDER
@@ -103,7 +121,7 @@ export class MagicAuthConnector extends MagicConnector {
   }
 
   async getChainId(): Promise<number> {
-    const networkOptions = this.additionalMagicOptions?.network;
+    const networkOptions = this.magicSdkConfiguration?.network;
     if (typeof networkOptions === 'object') {
     const chainID = networkOptions.chainId;
     if (chainID) {
@@ -116,7 +134,7 @@ export class MagicAuthConnector extends MagicConnector {
   getMagicSDK(): InstanceWithExtensions<SDKBase, OAuthExtension[]> {
     if (!this.magicSDK) {
       this.magicSDK = new Magic(this.magicOptions.apiKey, {
-        ...this.additionalMagicOptions,
+        ...this.magicSdkConfiguration,
         extensions: [new OAuthExtension()],
       });
       return this.magicSDK;
