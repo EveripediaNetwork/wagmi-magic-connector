@@ -63,7 +63,7 @@ const connector = new MagicConnector({
     oauthOptions : {
       providers: ['facebook', 'google', 'twitter'],
       callbackUrl: 'https://your-callback-url.com', //optional
-    };
+    }
   },
 })
 ```
@@ -195,6 +195,12 @@ export const rainbowMagicConnector = ({ chains }: any) => ({
       chains: chains,
       options: {
         apiKey: 'YOUR_MAGIC_API_KEY',
+        additionalMagicOptions: {
+          network: {
+            rpcUrl: 'https://polygon-rpc.com', // your ethereum, polygon, or optimism mainnet/testnet rpc URL
+            chainId: 137,
+          },
+        },
         //...Other options (check out full API below)
       },
     });
@@ -205,7 +211,10 @@ export const rainbowMagicConnector = ({ chains }: any) => ({
 });
 ```
 
-and import the above file to your application root where you wrap your application with `WagmiConfig` component.
+> Note: `options.additionalMagicOptions.network.chainId` is mandatory for the integration with RainbowKit
+> to properly work.
+
+Import the above file to your application root where you wrap your application with `WagmiConfig` component.
 pass the ```client``` prop with ```createClient``` instance to the `WagmiConfig` component as shown below:
 
 ```javascript
