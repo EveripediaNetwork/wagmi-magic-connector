@@ -4,7 +4,7 @@ import {
   MagicSDKAdditionalConfiguration,
   SDKBase,
 } from '@magic-sdk/provider';
-import { Chain, normalizeChainId, UserRejectedRequestError } from '@wagmi/core';
+import {Chain, normalizeChainId, UserRejectedRequestError} from '@wagmi/core';
 import { Magic } from 'magic-sdk';
 
 import { MagicConnector, MagicOptions } from './magicConnector';
@@ -60,12 +60,20 @@ export class MagicAuthConnector extends MagicConnector {
       // Check if there is a user logged in
       const isAuthenticated = await this.isAuthorized();
 
+      // Check if we have a chainId, in case of error just assign 0 for legacy
+      let chainId: number;
+      try {
+        chainId = await this.getChainId();
+      } catch(e) {
+        chainId = 0;
+      }
+
       // if there is a user logged in, return the user
       if (isAuthenticated) {
         return {
           provider,
           chain: {
-            id: 0,
+            id: chainId,
             unsupported: false,
           },
           account: await this.getAccount(),
@@ -109,7 +117,7 @@ export class MagicAuthConnector extends MagicConnector {
         return {
           account,
           chain: {
-            id: 0,
+            id: chainId,
             unsupported: false,
           },
           provider,

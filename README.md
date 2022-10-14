@@ -195,7 +195,7 @@ export const rainbowMagicConnector = ({ chains }: any) => ({
       chains: chains,
       options: {
         apiKey: 'YOUR_MAGIC_API_KEY',
-        additionalMagicOptions: {
+        magicSdkConfiguration: {
           network: {
             rpcUrl: 'https://polygon-rpc.com', // your ethereum, polygon, or optimism mainnet/testnet rpc URL
             chainId: 137,
