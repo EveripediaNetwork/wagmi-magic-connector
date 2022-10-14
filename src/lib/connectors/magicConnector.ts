@@ -89,10 +89,11 @@ export abstract class MagicConnector extends Connector {
   }
 
   async isAuthorized() {
+    const magic = this.getMagicSDK();
     try {
-      const account = await this.getAccount();
-      return !!account;
-    } catch {
+      return await magic.user.isLoggedIn();
+
+    } catch (e) {
       return false;
     }
   }

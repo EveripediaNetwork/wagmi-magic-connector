@@ -16,6 +16,9 @@ interface MagicConnectOptions extends MagicOptions {
   >;
 }
 
+const CONNECT_TIME_KEY = "wagmi-magic-connector.connect.time";
+const CONNECT_DURATION = 604800000; // 7 days in milliseconds
+
 export class MagicConnectConnector extends MagicConnector {
   magicSDK?: InstanceWithExtensions<SDKBase, ConnectExtension[]>;
 
@@ -50,7 +53,6 @@ export class MagicConnectConnector extends MagicConnector {
         chainId = 0;
       }
 
-
       // if there is a user logged in, return the user
       if (isAuthenticated) {
         return {
@@ -77,6 +79,10 @@ export class MagicConnectConnector extends MagicConnector {
 
         const signer = await this.getSigner();
         const account = await signer.getAddress();
+
+        // As we have no way to know if a user is connected to Magic Connect we store a connect timestamp
+        // in local storage
+        window.localStorage.setItem(CONNECT_TIME_KEY, String((new Date()).getTime()));
 
         return {
           account,
@@ -113,5 +119,13 @@ export class MagicConnectConnector extends MagicConnector {
       return this.magicSDK;
     }
     return this.magicSDK;
+  }
+
+  // Overrides isAuthorized because Connect opens overlay whenever we interact with one of its methods.
+  // Moreover, there is currently no proper way to know if a user is currently logged in to Magic Connect.
+  // So we use a local storage state to handle this information.
+  // TODO Once connect API grows, integrate it
+  async isAuthorized() {
+    return parseInt(window.localStorage.getItem(CONNECT_TIME_KEY)) + CONNECT_DURATION > (new Date()).getTime()
   }
 }
