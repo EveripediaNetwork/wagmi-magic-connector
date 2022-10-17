@@ -11,19 +11,21 @@
 # Table of Contents
 
 - [⬇️ Install](#%EF%B8%8F-install)
+- [🔎 Package TL;DR](#-package-tldr)
 - [⭐ Usage](#-usage)
-- [🌟 Enable Login by Socials (OAuth)](#-enable-login-by-socials-oauth)
-  - [Providers](#providers)
-  - [Callback URL](#callback-url)
-- [📲 Enable SMS Authentication](#-enable-sms-authentication)
-- [📧 Disable Email Authentication](#-disable-email-authentication)
-- [🎨 Modal Customization](#-modal-customization)
 - [📖 API](#-api)
   - [`options`](#options)
   - [`options.OAuthOptions`](#optionsoauthoptions)
+    - [Providers](#providers)
+    - [Callback URL](#callback-url)
 - [🍀 Supported Logins](#-supported-logins)
+- [🔆 Examples](#-examples)
+  - [🌟 Enable Login by Socials (OAuth)](#-enable-login-by-socials-oauth)
+  - [📲 Enable SMS Authentication](#-enable-sms-authentication)
+  - [📧 Disable Email Authentication](#-disable-email-authentication)
+  - [🎨 Modal Customization](#-modal-customization)
 - [📚 Additional Resources](#-additional-resources)
-  - [1. Usage with Rainbowkit](#1-usage-with-rainbowkit)
+  - [Usage with Rainbowkit](#usage-with-rainbowkit)
 
 # ⬇️ Install
 
@@ -37,12 +39,32 @@ or
 yarn add @everipedia/wagmi-magic-connector
 ```
 
+# 🔎 Package TL;DR
+
+The package contains two main connector classes: `MagicAuthConnector` & `MagicConnectConnector`
+
+`MagicAuthConnector` is a connector integrated to the [Magic Auth](https://magic.link/docs/auth/overview)
+product. It is useful if you need to assign an address to your user. 
+
+`MagicConnectConnector` is a connector integrated to the [Magic Connect](https://magic.link/docs/connect/overview)
+product. It can be used to assign a read-write wallet to your user.
+
+
 # ⭐ Usage
 
 ```javascript
-import { MagicConnector } from '@everipedia/wagmi-magic-connector';
+import { MagicAuthConnector, MagicConnectConnector } from '@everipedia/wagmi-magic-connector';
 
-const connector = new MagicConnector({
+// Magic Auth integration
+const connector = new MagicAuthConnector({
+  options: {
+    apiKey: YOUR_MAGIC_LINK_API_KEY, //required
+    //...Other options
+  },
+});
+
+// Magic Connect integration 
+const connector = new MagicConnectConnector({
   options: {
     apiKey: YOUR_MAGIC_LINK_API_KEY, //required
     //...Other options
@@ -50,27 +72,35 @@ const connector = new MagicConnector({
 });
 ```
 
-Check out all the available options in the [API Section](#-api).
+# 📖 API
 
-# 🌟 Enable Login by Socials (OAuth)
+## `options`
 
-You configure OAuth with magic by adding the following options to the connector:
+The following can be passed to connector options object:
 
-```javascript
-const connector = new MagicConnector({
-  options: {
-    apiKey: YOUR_MAGIC_LINK_API_KEY, //required
-    oauthOptions : {
-      providers: ['facebook', 'google', 'twitter'],
-      callbackUrl: 'https://your-callback-url.com', //optional
-    };
-  },
-})
-```
+| Key                   | Value                      | `MagicAuthConnector` support | `MagicConnectConnector` support | Description                                                                                                                                                                    |
+|-----------------------|----------------------------|------------------------------|---------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| accentColor           | css color (hex/rgb/etc...) | ✔️	                          | ✔️                              | 🎨 (Optional) Makes modal to use the custom accentColor instead of default purple                                                                                              |
+| isDarkMode            | true / false               | ✔️	                          | ✔️                              | 🎨 (Optional) Makes modal dark mode if true. Default value is false                                                                                                            |
+| customLogo            | path_to_logo / url         | ✔️	                          | ✔️                              | 🎨 (Optional) Makes modal to use the custom logo instead of default magic logo                                                                                                 |
+| headerText            | string                     | ✔️	                          | ✔️                              | 🎨 (Optional) Makes modal to use the custom header text instead of default text at the bottom of logo                                                                          |
+| enableSMSLogin        | true / false               | ✔️	                          | ❌                               | 🌟 (Optional) Makes modal to enable SMS login if true. Default value is false                                                                                                  |
+| enableEmailLogin      | true / false               | ✔️	                          | ❌                               | 🌟 (Optional) Makes modal to disable Email login if false. Default value is true                                                                                               |
+| OAuthOptions          | object                     | ✔️	                          | ❌                               | 🌟 (Optional) Makes modal to enable OAuth login according to configuration passed.                                                                                             |
+| magicSdkConfiguration | object                     | ✔️	                          | ✔️                              | 🛠️ (Optional) Pass additional options to Magic constructor (refer [Magic API documentation](https://magic.link/docs/api-reference/client-side-sdks/web#constructor) for more) |
+
+## `options.OAuthOptions`
+
+The following can be passed to options.OAuthOptions object to configure OAuth login:
+
+| Key         | Vvalue           | Description                                                                                               |
+|-------------|------------------|-----------------------------------------------------------------------------------------------------------|
+| providers   | array of strings | 🌟 (Required) List of providers to enable. check out all possible providers in OauthOptions section above |
+| callbackUrl | string           | 🌟 (Optional) Callback URL to redirect to after authentication. Default value is current URL.             |
 
 ### Providers
 
-here are all the possible providers:
+Here are all the possible providers:
 
 - google
 - facebook
@@ -88,12 +118,41 @@ here are all the possible providers:
 
 You can provide a callback URL to redirect the user to after authentication. the default callback URL is set to the current URL.
 
-# 📲 Enable SMS Authentication
+# 🍀 Supported Logins
+
+| Key                        | `MagicAuthConnector` support | `MagicConnectConnector` support |
+|----------------------------|------------------------------|---------------------------------|
+| Email                      | ✔️	                          | ✔️	                             |
+| SMS                        | ✔️	                          | ❌                               |
+| Social Logins              | ✔️	                          | ❌                               |
+| WebAuthn                   | ❌                            | ❌                               |
+| Multifactor Authentication | ❌                            | ❌                               |
+
+# 🔆 Examples
+
+## 🌟 Enable Login by Socials (OAuth)
+
+You configure OAuth with magic by adding the following options to the connector:
+
+```javascript
+const connector = new MagicAuthConnector({
+  options: {
+    apiKey: YOUR_MAGIC_LINK_API_KEY, //required
+    oauthOptions : {
+      providers: ['facebook', 'google', 'twitter'],
+      callbackUrl: 'https://your-callback-url.com', //optional
+    }
+  },
+})
+```
+
+
+## 📲 Enable SMS Authentication
 
 You can enable SMS authentication by adding the following options to the connector:
 
 ```javascript
-const connector = new MagicConnector({
+const connector = new MagicAuthConnector({
   options: {
     apiKey: YOUR_MAGIC_LINK_API_KEY, //required
     enableSMSLogin: true, //optional (default: false)
@@ -104,12 +163,12 @@ const connector = new MagicConnector({
 
 You have to enable SMS authentication in your Magic Link account first to make it work.
 
-#  📧 Disable Email Authentication
+## 📧 Disable Email Authentication
 
 By default Email Authentication is set to true as default. if you wish to remove sending magic links via emails, pass ```enableEmailLogin: false``` in options object as follows :
 
 ```javascript
-const connector = new MagicConnector({
+const connector = new MagicAuthConnector({
   options: {
     apiKey: YOUR_MAGIC_LINK_API_KEY, //required
     enableEmailLogin: false, //optional (default: true)
@@ -119,14 +178,14 @@ const connector = new MagicConnector({
 ```
   
 
-# 🎨 Modal Customization
+## 🎨 Modal Customization
 
 You can customize the modal's theme, default accent color, logo and header text.
 
 ```javascript
-import { MagicConnector } from '@everipedia/wagmi-magic-connector';
+import { MagicAuthConnector } from '@everipedia/wagmi-magic-connector';
 
-const connector = new MagicConnector({
+const connector = new MagicAuthConnector({
   options: {
     apiKey: YOUR_MAGIC_LINK_API_KEY,
     accentColor: '#ff0000',
@@ -140,50 +199,16 @@ const connector = new MagicConnector({
 check out the [API Section](#-api) for more information.
 for complete styling, you can override styles of the modal with ```! important```.
 
-# 📖 API
-
-## `options`
-
-The following can be passed to connector options object:
-
-| Key                    | value                      | Description                                                                                                                                                                   |
-| ---------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| accentColor            | css color (hex/rgb/etc...) | 🎨 (Optional) Makes modal to use the custom accentColor instead of default purple                                                                                             |
-| isDarkMode             | true / false               | 🎨 (Optional) Makes modal dark mode if true. Default value is false                                                                                                           |
-| customLogo             | path_to_logo / url         | 🎨 (Optional) Makes modal to use the custom logo instead of default magic logo                                                                                                |
-| headerText             | string                     | 🎨 (Optional) Makes modal to use the custom header text instead of default text at the bottom of logo                                                                         |
-| enableSMSLogin         | true / false               | 🌟 (Optional) Makes modal to enable SMS login if true. Default value is false                                                                                                 |
-| enableEmailLogin       | true / false               | 🌟 (Optional) Makes modal to disable Email login if false. Default value is true                                                                                                 |
-| OAuthOptions           | object                     | 🌟 (Optional) Makes modal to enable OAuth login according to configuration passed.                                                                                            |
-| additionalMagicOptions | object                     | 🛠️ (Optional) Pass additional options to Magic constructor (refer [Magic API documentation](https://magic.link/docs/api-reference/client-side-sdks/web#constructor) for more) |
-
-## `options.OAuthOptions`
-
-The following can be passed to options.OAuthOptions object to configure OAuth login:
-
-| Key         | value            | Description                                                                                               |
-| ----------- | ---------------- | --------------------------------------------------------------------------------------------------------- |
-| providers   | array of strings | 🌟 (Required) List of providers to enable. check out all possible providers in OauthOptions section above |
-| callbackUrl | string           | 🌟 (Optional) Callback URL to redirect to after authentication. Default value is current URL.             |
-
-# 🍀 Supported Logins
-
-- [x] Email
-- [x] SMS
-- [x] Social Logins
-- [ ] WebAuthn
-- [ ] Multifactor Authentication
-
 # 📚 Additional Resources
 
-## 1. Usage with RainbowKit
+## Usage with RainbowKit
 
 To use the connector with Rainbow kit, create a new file `RainbowMagicConnector.ts` with following contents:
 
 ```javascript
 // RainbowMagicConnector.ts
 
-import { MagicConnector } from '@everipedia/wagmi-magic-connector';
+import { MagicConnectConnector } from '@everipedia/wagmi-magic-connector';
 
 export const rainbowMagicConnector = ({ chains }: any) => ({
   id: 'magic',
@@ -191,10 +216,16 @@ export const rainbowMagicConnector = ({ chains }: any) => ({
   iconUrl: 'https://svgshare.com/i/iJK.svg',
   iconBackground: '#fff',
   createConnector: () => {
-    const connector = new MagicConnector({
+    const connector = new MagicConnectConnector({
       chains: chains,
       options: {
-        apiKey: 'YOUR_MAGIC_API_KEY',
+        apiKey: 'YOUR_MAGIC_CONNECT_API_KEY',
+        magicSdkConfiguration: {
+          network: {
+            rpcUrl: 'https://polygon-rpc.com', // your ethereum, polygon, or optimism mainnet/testnet rpc URL
+            chainId: 137,
+          },
+        },
         //...Other options (check out full API below)
       },
     });
@@ -205,7 +236,10 @@ export const rainbowMagicConnector = ({ chains }: any) => ({
 });
 ```
 
-and import the above file to your application root where you wrap your application with `WagmiConfig` component.
+> Note: `options.magicSdkConfiguration.network.chainId` is mandatory for the integration with RainbowKit
+> to properly work.
+
+Import the above file to your application root where you wrap your application with `WagmiConfig` component.
 pass the ```client``` prop with ```createClient``` instance to the `WagmiConfig` component as shown below:
 
 ```javascript

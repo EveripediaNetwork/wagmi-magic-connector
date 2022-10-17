@@ -1,1 +1,2 @@
-export * from './lib/connector';
+export * from './lib/connectors/magicAuthConnector';
+export * from './lib/connectors/magicConnectConnector';

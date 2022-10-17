@@ -24,27 +24,28 @@
   },
   "dependencies": {
     "@changesets/cli": "^2.24.0",
-    "@magic-ext/oauth": "^2.1.1",
-    "@magic-sdk/provider": "^8.1.1",
-    "@wagmi/core": "^0.4.9",
-    "magic-sdk": "^8.1.1"
+    "@magic-ext/connect": "^3.0.0",
+    "@magic-ext/oauth": "^4.0.0",
+    "@magic-sdk/provider": "^10.0.0",
+    "@wagmi/core": "^0.5.8",
+    "magic-sdk": "^10.0.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.30.7",
     "@typescript-eslint/parser": "^5.30.7",
-    "@wagmi/core": "^0.4.9",
+    "@wagmi/core": "^0.5.8",
     "changeset": "^0.2.6",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-import": "^2.26.0",
-    "ethers": "^5.6.9",
+    "ethers": "^5.7.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "ethers": "^5.6.9"
+    "ethers": "^5.7.1"
   },
   "files": [
     "build/main",
