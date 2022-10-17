@@ -9,6 +9,7 @@
     - `MagicConnectConnector`: Connector integrating with [Magic Connect](https://magic.link/docs/connect/overview).
 - Made `MagicConnector` an abstract class containing shared logic between `MagicAuthConnector` & `MagicConnectConnector`
 - Renamed `options.additionalMagicOptions` to `options.magicSdkConfiguration`, which seemed to be a clearer name
+- Renamed `enableSMSlogin` to `enableSMSLogin`
 - Updated documentation in README to fit changes
 
 ### Minor
