@@ -63,7 +63,7 @@ export abstract class MagicConnector extends Connector {
       customLogo: this.magicOptions.customLogo,
       customHeaderText: this.magicOptions.customHeaderText,
       enableSMSLogin: enableSMSLogin,
-      enableEmailLogin: enableEmailLogin,
+      enableEmailLogin: enableEmailLogin || true,
       oauthProviders,
     })) as UserDetails;
 
