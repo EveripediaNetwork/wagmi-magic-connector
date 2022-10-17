@@ -11,7 +11,7 @@
 # Table of Contents
 
 - [⬇️ Install](#%EF%B8%8F-install)
-- [🔎 Package TL;DR](#-package-tl%3Bdr)
+- [🔎 Package TL;DR](#-package-tldr)
 - [⭐ Usage](#-usage)
 - [📖 API](#-api)
   - [`options`](#options)
