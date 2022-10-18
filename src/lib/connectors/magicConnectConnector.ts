@@ -75,23 +75,23 @@ export class MagicConnectConnector extends MagicConnector {
           await magic.auth.loginWithEmailOTP({
             email: output.email,
           });
+
+          const signer = await this.getSigner();
+          const account = await signer.getAddress();
+
+          // As we have no way to know if a user is connected to Magic Connect we store a connect timestamp
+          // in local storage
+          window.localStorage.setItem(CONNECT_TIME_KEY, String((new Date()).getTime()));
+
+          return {
+            account,
+            chain: {
+              id: chainId,
+              unsupported: false,
+            },
+            provider,
+          };
         }
-
-        const signer = await this.getSigner();
-        const account = await signer.getAddress();
-
-        // As we have no way to know if a user is connected to Magic Connect we store a connect timestamp
-        // in local storage
-        window.localStorage.setItem(CONNECT_TIME_KEY, String((new Date()).getTime()));
-
-        return {
-          account,
-          chain: {
-            id: chainId,
-            unsupported: false,
-          },
-          provider,
-        };
       }
       throw new UserRejectedRequestError('User rejected request');
     } catch (error) {
