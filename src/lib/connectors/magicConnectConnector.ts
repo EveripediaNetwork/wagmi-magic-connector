@@ -126,6 +126,17 @@ export class MagicConnectConnector extends MagicConnector {
   // So we use a local storage state to handle this information.
   // TODO Once connect API grows, integrate it
   async isAuthorized() {
+    if (localStorage.getItem(CONNECT_TIME_KEY) === null) {
+      return false;
+    }
     return parseInt(window.localStorage.getItem(CONNECT_TIME_KEY)) + CONNECT_DURATION > (new Date()).getTime()
   }
+
+  // Overrides disconnect because there is currently no proper way to disconnect a user from Magic
+  // Connect.
+  // So we use a local storage state to handle this information.
+  async disconnect(): Promise<void> {
+    window.localStorage.removeItem(CONNECT_TIME_KEY);
+  }
+
 }
