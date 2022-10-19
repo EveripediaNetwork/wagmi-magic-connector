@@ -75,23 +75,23 @@ export class MagicConnectConnector extends MagicConnector {
           await magic.auth.loginWithEmailOTP({
             email: output.email,
           });
+
+          const signer = await this.getSigner();
+          const account = await signer.getAddress();
+
+          // As we have no way to know if a user is connected to Magic Connect we store a connect timestamp
+          // in local storage
+          window.localStorage.setItem(CONNECT_TIME_KEY, String((new Date()).getTime()));
+
+          return {
+            account,
+            chain: {
+              id: chainId,
+              unsupported: false,
+            },
+            provider,
+          };
         }
-
-        const signer = await this.getSigner();
-        const account = await signer.getAddress();
-
-        // As we have no way to know if a user is connected to Magic Connect we store a connect timestamp
-        // in local storage
-        window.localStorage.setItem(CONNECT_TIME_KEY, String((new Date()).getTime()));
-
-        return {
-          account,
-          chain: {
-            id: chainId,
-            unsupported: false,
-          },
-          provider,
-        };
       }
       throw new UserRejectedRequestError('User rejected request');
     } catch (error) {
@@ -126,6 +126,17 @@ export class MagicConnectConnector extends MagicConnector {
   // So we use a local storage state to handle this information.
   // TODO Once connect API grows, integrate it
   async isAuthorized() {
+    if (localStorage.getItem(CONNECT_TIME_KEY) === null) {
+      return false;
+    }
     return parseInt(window.localStorage.getItem(CONNECT_TIME_KEY)) + CONNECT_DURATION > (new Date()).getTime()
   }
+
+  // Overrides disconnect because there is currently no proper way to disconnect a user from Magic
+  // Connect.
+  // So we use a local storage state to handle this information.
+  async disconnect(): Promise<void> {
+    window.localStorage.removeItem(CONNECT_TIME_KEY);
+  }
+
 }
