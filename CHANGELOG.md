@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.8.0
+
+### Minor Changes
+
+- a5d6191: Updates packages to use latest magic sdk and wagmi core
+
 ## 0.7.1
 
 ### Patch Changes
