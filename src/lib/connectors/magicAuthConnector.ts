@@ -2,9 +2,15 @@ import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth';
 import {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
+  MagicSDKExtensionsOption,
   SDKBase,
 } from '@magic-sdk/provider';
-import {Chain, normalizeChainId, UserRejectedRequestError} from '@wagmi/core';
+import {
+  Address,
+  Chain,
+  normalizeChainId,
+  UserRejectedRequestError,
+} from '@wagmi/core';
 import { Magic } from 'magic-sdk';
 
 import { MagicConnector, MagicOptions } from './magicConnector';
@@ -27,7 +33,7 @@ export class MagicAuthConnector extends MagicConnector {
 
   magicSdkConfiguration: MagicSDKAdditionalConfiguration<
     string,
-    OAuthExtension[]
+    MagicSDKExtensionsOption<OAuthExtension['name']>
   >;
 
   enableSMSLogin: boolean;
@@ -64,7 +70,7 @@ export class MagicAuthConnector extends MagicConnector {
       let chainId: number;
       try {
         chainId = await this.getChainId();
-      } catch(e) {
+      } catch (e) {
         chainId = 0;
       }
 
@@ -112,7 +118,8 @@ export class MagicAuthConnector extends MagicConnector {
         }
 
         const signer = await this.getSigner();
-        const account = await signer.getAddress();
+        let account = (await signer.getAddress()) as Address;
+        if (!account.startsWith('0x')) account = `0x${account}`;
 
         return {
           account,
