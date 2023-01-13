@@ -2,7 +2,7 @@ import { ConnectExtension } from '@magic-ext/connect';
 import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth';
 import { InstanceWithExtensions, SDKBase } from '@magic-sdk/provider';
 import { RPCProviderModule } from '@magic-sdk/provider/dist/types/modules/rpc-provider';
-import { Chain, Connector, normalizeChainId } from '@wagmi/core';
+import { Address, Chain, Connector, normalizeChainId } from '@wagmi/core';
 import { ethers, Signer } from 'ethers';
 import { getAddress } from 'ethers/lib/utils';
 import { AbstractProvider } from 'web3-core';
@@ -43,13 +43,14 @@ export abstract class MagicConnector extends Connector {
     this.magicOptions = config.options;
   }
 
-  async getAccount(): Promise<string> {
+  async getAccount(): Promise<Address> {
     const provider = new ethers.providers.Web3Provider(
       await this.getProvider()
     );
     const signer = provider.getSigner();
     const account = await signer.getAddress();
-    return account;
+    if (account.startsWith('0x')) return account as Address;
+    return `0x${account}`;
   }
 
   async getUserDetailsByForm(
@@ -92,7 +93,6 @@ export abstract class MagicConnector extends Connector {
     const magic = this.getMagicSDK();
     try {
       return await magic.user.isLoggedIn();
-
     } catch (e) {
       return false;
     }
