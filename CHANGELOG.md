@@ -1,5 +1,13 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.9.0
+
+### Minor Changes
+
+- adb6e07: Changes @everipedia/wagmi-magic-connector to a pure ESM Module package.
+
+  Requires Node 12.20.0 or higher. it fixes resolution issues of latest wagmi and magic packages and should work well out of the box with Nextjs and other react frameworks without the need for any extra configuration.
+
 ## 0.8.0
 
 ### Minor Changes
