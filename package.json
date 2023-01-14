@@ -20,7 +20,7 @@
     "fix:lint": "eslint src --ext .ts --fix",
     "watch:build": "tsc -p tsconfig.json -w",
     "reset-hard": "git clean -dfx && git reset --hard && yarn",
-    "release": "yarn build:module && changeset publish"
+    "release": "yarn build:module && tsc-esm-fix --target='build/module' --ext='.js' && changeset publish"
   },
   "engines": {
     "node": ">=10"
@@ -31,7 +31,8 @@
     "@magic-ext/oauth": "^7.1.0",
     "@magic-sdk/provider": "^13.1.0",
     "@wagmi/core": "^0.8.14",
-    "magic-sdk": "^13.1.0"
+    "magic-sdk": "^13.1.0",
+    "tsc-esm-fix": "^2.20.10"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.30.7",
