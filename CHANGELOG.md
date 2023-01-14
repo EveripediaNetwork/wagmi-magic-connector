@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.9.1
+
+### Patch Changes
+
+- 5a555d8: Adds post processing on build output for adding .js ext for ESM resolution
+
 ## 0.9.0
 
 ### Minor Changes
