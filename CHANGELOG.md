@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.10.0
+
+### Minor Changes
+
+- 82a5174: Throws `api key not provided` error instead of `user rejected request` error
+
 ## 0.9.1
 
 ### Patch Changes
