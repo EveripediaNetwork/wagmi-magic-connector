@@ -32,6 +32,8 @@ export class MagicConnectConnector extends MagicConnector {
   }
 
   async connect() {
+    if (!this.magicOptions.apiKey)
+      throw new Error('Magic API Key is not provided.');
     try {
       const provider = await this.getProvider();
 
