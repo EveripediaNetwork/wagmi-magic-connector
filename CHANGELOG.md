@@ -1,5 +1,14 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.10.1
+
+### Patch Changes
+
+- c7dfeaf: ### Patch Changes
+
+  - Fixing a bug that prevents login with email because of a MagicSDK naming convention recent change.
+  - Dependencies update.
+
 ## 0.10.0
 
 ### Minor Changes
