@@ -73,9 +73,7 @@ export class MagicConnectConnector extends MagicConnector {
 
         // LOGIN WITH MAGIC LINK WITH EMAIL
         if (output.email) {
-          await magic.auth.loginWithEmailOTP({
-            email: output.email,
-          });
+          await magic.wallet.connectWithUI();
 
           const signer = await this.getSigner();
           let account = (await signer.getAddress()) as Address;
