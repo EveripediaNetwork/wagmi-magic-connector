@@ -1,4 +1,3 @@
-import { ConnectExtension } from '@magic-ext/connect';
 import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth';
 import { InstanceWithExtensions, SDKBase } from '@magic-sdk/provider';
 import { RPCProviderModule } from '@magic-sdk/provider/dist/types/modules/rpc-provider';
@@ -118,7 +117,5 @@ export abstract class MagicConnector extends Connector {
     await magic.user.logout();
   }
 
-  abstract getMagicSDK():
-    | InstanceWithExtensions<SDKBase, OAuthExtension[]>
-    | InstanceWithExtensions<SDKBase, ConnectExtension[]>;
+  abstract getMagicSDK(): InstanceWithExtensions<SDKBase, OAuthExtension[]>;
 }
