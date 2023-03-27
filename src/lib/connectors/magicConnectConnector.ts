@@ -130,11 +130,11 @@ export class MagicConnectConnector extends Connector {
     return provider.getSigner();
   }
 
-  // Autoconnect if wallet info is available
+  // Autoconnect if account is available
   async isAuthorized() {
     try {
-      await this.magic.wallet.getInfo();
-      return true;
+      const walletInfo = await this.magic.wallet.getInfo();
+      return !!walletInfo;
     } catch {
       return false;
     }
