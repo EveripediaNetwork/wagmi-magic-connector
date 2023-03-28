@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.10.2
+
+### Patch Changes
+
+- 58b39f3: Update Magic Connect Connector to use Magic Connect's Modal UI
+
 ## 0.10.1
 
 ### Patch Changes
