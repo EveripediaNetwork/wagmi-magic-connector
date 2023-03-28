@@ -2,9 +2,11 @@
 
 ## 0.10.2
 
-### Patch Changes
+### Minor Changes
 
 - 58b39f3: Update Magic Connect Connector to use Magic Connect's Modal UI
+  - This will use Magic Connect's Modal instead of homemade one.  
+  - Remove the styling props to constructor for migration 
 
 ## 0.10.1
 
