@@ -1,147 +1,160 @@
-import { ConnectExtension } from '@magic-ext/connect';
+import { Magic } from 'magic-sdk';
 import {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
   SDKBase,
 } from '@magic-sdk/provider';
+import { ConnectExtension } from '@magic-ext/connect';
 import {
   Address,
   Chain,
   normalizeChainId,
   UserRejectedRequestError,
+  Connector,
 } from '@wagmi/core';
-import { Magic } from 'magic-sdk';
+import { AbstractProvider } from 'web3-core';
+import { RPCProviderModule } from '@magic-sdk/provider/dist/types/modules/rpc-provider';
+import { ethers, Signer } from 'ethers';
+import { getAddress } from 'ethers/lib/utils.js';
 
-import { MagicConnector, MagicOptions } from './magicConnector';
-
-interface MagicConnectOptions extends MagicOptions {
+// Define the interface for MagicConnector options
+export interface MagicConnectorOptions {
+  apiKey: string;
   magicSdkConfiguration?: MagicSDKAdditionalConfiguration;
 }
 
-const CONNECT_TIME_KEY = 'wagmi-magic-connector.connect.time';
-const CONNECT_DURATION = 604800000; // 7 days in milliseconds
+// MagicConnectConnector class extends the base wagmi Connector class
+export class MagicConnectConnector extends Connector {
+  readonly id = 'magic';
+  readonly name = 'Magic';
+  readonly ready = true;
+  provider: RPCProviderModule & AbstractProvider;
+  magic: InstanceWithExtensions<SDKBase, ConnectExtension[]>;
 
-export class MagicConnectConnector extends MagicConnector {
-  magicSDK?: InstanceWithExtensions<SDKBase, ConnectExtension[]>;
-
-  magicSdkConfiguration: MagicConnectOptions['magicSdkConfiguration'];
-
-  constructor(config: { chains?: Chain[]; options: MagicConnectOptions }) {
+  // Constructor initializes the Magic instance
+  // allows connectUI modal to display faster when connect method is called
+  constructor(config: { chains?: Chain[]; options: MagicConnectorOptions }) {
     super(config);
-    this.magicSdkConfiguration = config.options.magicSdkConfiguration;
+    this.initializeMagicInstance();
   }
 
-  async connect() {
-    if (!this.magicOptions.apiKey)
-      throw new Error('Magic API Key is not provided.');
-    try {
-      const provider = await this.getProvider();
+  // Private method to initialize the Magic instance
+  private initializeMagicInstance() {
+    const { apiKey, magicSdkConfiguration } = this.options;
+    if (typeof window !== 'undefined') {
+      this.magic = new Magic(apiKey, {
+        ...magicSdkConfiguration,
+        extensions: [new ConnectExtension()],
+      });
 
-      if (provider.on) {
-        provider.on('accountsChanged', this.onAccountsChanged);
-        provider.on('chainChanged', this.onChainChanged);
-        provider.on('disconnect', this.onDisconnect);
-      }
-
-      // Check if there is a user logged in
-      const isAuthenticated = await this.isAuthorized();
-
-      // Check if we have a chainId, in case of error just assign 0 for legacy
-      let chainId: number;
-      try {
-        chainId = await this.getChainId();
-      } catch (e) {
-        chainId = 0;
-      }
-
-      // if there is a user logged in, return the user
-      if (isAuthenticated) {
-        return {
-          provider,
-          chain: {
-            id: chainId,
-            unsupported: false,
-          },
-          account: await this.getAccount(),
-        };
-      }
-
-      // open the modal and process the magic login steps
-      if (!this.isModalOpen) {
-        const output = await this.getUserDetailsByForm(false, true, []);
-        const magic = this.getMagicSDK();
-
-        // LOGIN WITH MAGIC LINK WITH EMAIL
-        if (output.email) {
-          await magic.wallet.connectWithUI();
-
-          const signer = await this.getSigner();
-          let account = (await signer.getAddress()) as Address;
-          if (!account.startsWith('0x')) account = `0x${account}`;
-
-          // As we have no way to know if a user is connected to Magic Connect we store a connect timestamp
-          // in local storage
-          window.localStorage.setItem(
-            CONNECT_TIME_KEY,
-            String(new Date().getTime())
-          );
-
-          return {
-            account,
-            chain: {
-              id: chainId,
-              unsupported: false,
-            },
-            provider,
-          };
-        }
-      }
-      throw new UserRejectedRequestError('User rejected request');
-    } catch (error) {
-      throw new UserRejectedRequestError('Something went wrong');
+      this.provider = this.magic.rpcProvider;
+      console.log('initializeMagicInstance', this.magic);
     }
   }
 
+  // Connect method attempts to connects to wallet using Magic Connect modal
+  async connect() {
+    try {
+      await this.magic.wallet.connectWithUI();
+      const provider = await this.getProvider();
+      const chainId = await this.getChainId();
+
+      this.registerProviderEventListeners(provider);
+
+      const account = await this.getAccount();
+
+      return {
+        account,
+        chain: {
+          id: chainId,
+          unsupported: false,
+        },
+        provider,
+      };
+    } catch (error) {
+      throw new UserRejectedRequestError(error);
+    }
+  }
+
+  // Private method to register event listeners for the provider
+  private registerProviderEventListeners(
+    provider: RPCProviderModule & AbstractProvider
+  ) {
+    if (provider.on) {
+      provider.on('accountsChanged', this.onAccountsChanged);
+      provider.on('chainChanged', this.onChainChanged);
+      provider.on('disconnect', this.onDisconnect);
+    }
+  }
+
+  // Disconnect method attempts to disconnect wallet from Magic
+  async disconnect(): Promise<void> {
+    try {
+      await this.magic.wallet.disconnect();
+      this.emit('disconnect');
+    } catch (error) {
+      console.error('Error disconnecting from Magic SDK:', error);
+    }
+  }
+
+  // Get connected wallet address
+  async getAccount(): Promise<Address> {
+    const signer = await this.getSigner();
+    const account = await signer.getAddress();
+    return getAddress(account);
+  }
+
+  // Get chain ID
   async getChainId(): Promise<number> {
-    const networkOptions = this.magicSdkConfiguration?.network;
+    const networkOptions = this.options.magicSdkConfiguration?.network;
     if (typeof networkOptions === 'object') {
       const chainID = networkOptions.chainId;
-      if (chainID) {
-        return normalizeChainId(chainID);
-      }
+      if (chainID) return normalizeChainId(chainID);
     }
     throw new Error('Chain ID is not defined');
   }
 
-  getMagicSDK(): InstanceWithExtensions<SDKBase, ConnectExtension[]> {
-    if (!this.magicSDK) {
-      this.magicSDK = new Magic(this.magicOptions.apiKey, {
-        ...this.magicSdkConfiguration,
-        extensions: [new ConnectExtension()],
-      });
+  // Get the Magic Instance provider
+  async getProvider() {
+    if (!this.provider) {
+      this.provider = this.magic.rpcProvider;
     }
-    return this.magicSDK;
+    return this.provider;
   }
 
-  // Overrides isAuthorized because Connect opens overlay whenever we interact with one of its methods.
-  // Moreover, there is currently no proper way to know if a user is currently logged in to Magic Connect.
-  // So we use a local storage state to handle this information.
-  // TODO Once connect API grows, integrate it
+  // Get the Magic Instance signer
+  async getSigner(): Promise<Signer> {
+    const provider = new ethers.providers.Web3Provider(
+      await this.getProvider()
+    );
+    return provider.getSigner();
+  }
+
+  // Autoconnect if account is available
   async isAuthorized() {
-    if (localStorage.getItem(CONNECT_TIME_KEY) === null) {
+    try {
+      const walletInfo = await this.magic.wallet.getInfo();
+      return !!walletInfo;
+    } catch {
       return false;
     }
-    return (
-      parseInt(window.localStorage.getItem(CONNECT_TIME_KEY)) +
-        CONNECT_DURATION >
-      new Date().getTime()
-    );
   }
 
-  // Overrides disconnect because there is currently no proper way to disconnect a user from Magic
-  // Connect.
-  // So we use a local storage state to handle this information.
-  async disconnect(): Promise<void> {
-    window.localStorage.removeItem(CONNECT_TIME_KEY);
-  }
+  // Event handler for accountsChanged event
+  onAccountsChanged = (accounts: string[]): void => {
+    if (accounts.length === 0) this.emit('disconnect');
+    else this.emit('change', { account: getAddress(accounts[0]) });
+  };
+
+  // Event handler for chainChanged event
+  onChainChanged = (chainId: string | number): void => {
+    const id = normalizeChainId(chainId);
+    const unsupported = this.isChainUnsupported(id);
+    this.emit('change', { chain: { id, unsupported } });
+  };
+
+  // Event handler for disconnect event
+  onDisconnect = (): void => {
+    this.emit('disconnect');
+  };
 }
