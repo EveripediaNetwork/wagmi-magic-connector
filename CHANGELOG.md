@@ -1,6 +1,6 @@
 # @everipedia/wagmi-magic-connector
 
-## 0.10.2
+## 0.11.0
 
 ### Minor Changes
 
