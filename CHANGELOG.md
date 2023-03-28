@@ -1,5 +1,13 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.11.0
+
+### Minor Changes
+
+- 58b39f3: Update Magic Connect Connector to use Magic Connect's Modal UI
+  - This will use Magic Connect's Modal instead of homemade one.  
+  - Remove the styling props to constructor for migration 
+
 ## 0.10.1
 
 ### Patch Changes
