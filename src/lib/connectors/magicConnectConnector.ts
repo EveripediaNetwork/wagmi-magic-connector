@@ -48,7 +48,6 @@ export class MagicConnectConnector extends Connector {
       });
 
       this.provider = this.magic.rpcProvider;
-      console.log('initializeMagicInstance', this.magic);
     }
   }
 
