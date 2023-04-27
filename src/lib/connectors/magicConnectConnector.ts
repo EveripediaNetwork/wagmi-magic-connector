@@ -30,11 +30,18 @@ export class MagicConnectConnector extends Connector {
   readonly ready = true;
   provider: RPCProviderModule & AbstractProvider;
   magic: InstanceWithExtensions<SDKBase, ConnectExtension[]>;
+  apiKey: string;
+  rpcUrls: { [key: number]: string };
 
   // Constructor initializes the Magic instance
   // allows connectUI modal to display faster when connect method is called
-  constructor(config: { chains?: Chain[]; options: MagicConnectorOptions }) {
+  constructor(
+    config: { chains?: Chain[]; options: MagicConnectorOptions },
+    rpcUrls: { [key: number]: string }
+  ) {
     super(config);
+    this.apiKey = config.options.apiKey;
+    this.rpcUrls = rpcUrls;
     this.initializeMagicInstance();
   }
 
@@ -105,6 +112,13 @@ export class MagicConnectConnector extends Connector {
 
   // Get chain ID
   async getChainId(): Promise<number> {
+    if (this.provider) {
+      const chainId = await this.provider.request({
+        method: 'eth_chainId',
+        params: [],
+      });
+      return normalizeChainId(chainId);
+    }
     const networkOptions = this.options.magicSdkConfiguration?.network;
     if (typeof networkOptions === 'object') {
       const chainID = networkOptions.chainId;
@@ -156,4 +170,35 @@ export class MagicConnectConnector extends Connector {
   onDisconnect = (): void => {
     this.emit('disconnect');
   };
+
+  async switchChain(chainId: number): Promise<Chain> {
+    const normalizedChainId = normalizeChainId(chainId);
+    const chain = this.chains.find((x) => x.id === normalizedChainId);
+    if (!chain) throw new Error(`Unsupported chainId: ${chainId}`);
+    const rpcUrl = this.rpcUrls[normalizedChainId];
+    if (!rpcUrl) throw new Error(`Unsupported chainId: ${chainId}`);
+
+    const account = await this.getAccount();
+
+    if (this.provider.off) {
+      this.provider.off('accountsChanged', this.onAccountsChanged);
+      this.provider.off('chainChanged', this.onChainChanged);
+      this.provider.off('disconnect', this.onDisconnect);
+    }
+
+    this.magic = new Magic(this.apiKey, {
+      network: { chainId: normalizedChainId, rpcUrl },
+      extensions: [new ConnectExtension()],
+    });
+
+    this.provider = null;
+    const provider = await this.getProvider();
+    this.registerProviderEventListeners(provider);
+
+    this.onChainChanged(chain.id);
+
+    this.onAccountsChanged([account]);
+
+    return chain;
+  }
 }
