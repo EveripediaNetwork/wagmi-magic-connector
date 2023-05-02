@@ -6,10 +6,8 @@
   "ignorePatterns": ["node_modules", "build", "coverage"],
   "plugins": ["import", "eslint-comments"],
   "extends": [
-    "eslint:recommended",
-    "plugin:eslint-comments/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:import/typescript",
+    "eslint:recommended", "plugin:eslint-comments/recommended",
+    "plugin:@typescript-eslint/recommended", "plugin:import/typescript",
     "prettier"
   ],
   "globals": { "BigInt": true, "console": true, "WebAssembly": true },

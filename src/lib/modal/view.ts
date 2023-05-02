@@ -1,4 +1,4 @@
-import { OAuthProvider } from '@magic-ext/oauth';
+import { OAuthProvider } from '@magic-ext/oauth'
 
 import {
   appleLogo,
@@ -13,22 +13,22 @@ import {
   microsoftLogo,
   twitchLogo,
   twitterLogo,
-} from './logos';
-import { modalStyles } from './styles';
+} from './logos'
+import { modalStyles } from './styles'
 
 export const createModal = async (props: {
-  accentColor?: string;
-  isDarkMode?: boolean;
-  customLogo?: string;
-  customHeaderText?: string;
-  enableSMSLogin?: boolean;
-  enableEmailLogin?: boolean;
-  oauthProviders?: OAuthProvider[];
+  accentColor?: string
+  isDarkMode?: boolean
+  customLogo?: string
+  customHeaderText?: string
+  enableSMSLogin?: boolean
+  enableEmailLogin?: boolean
+  oauthProviders?: OAuthProvider[]
 }) => {
   // INJECT FORM STYLES
-  const style = document.createElement('style');
-  style.innerHTML = modalStyles(props.accentColor);
-  document.head.appendChild(style);
+  const style = document.createElement('style')
+  style.innerHTML = modalStyles(props.accentColor)
+  document.head.appendChild(style)
 
   // PROVIDERS FOR OAUTH BUTTONS
   const allProviders = [
@@ -43,23 +43,21 @@ export const createModal = async (props: {
     { name: 'discord', icon: discordLogo },
     { name: 'twitch', icon: twitchLogo },
     { name: 'microsoft', icon: microsoftLogo },
-  ];
+  ]
 
   // make providers included in oauthProviders
   const providers = props.oauthProviders
     ?.map((provider) => {
-      return allProviders.find((p) => p.name === provider);
+      return allProviders.find((p) => p.name === provider)
     })
-    .filter((p) => p !== undefined);
+    .filter((p) => p !== undefined)
 
-  const phoneNumberRegex = `(\\+|00)[0-9]{1,3}[0-9]{4,14}(?:x.+)?$`;
-  const emailRegex = `^([a-zA-Z0-9_.-])+(\\+[a-zA-Z0-9-]+)?@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})`;
+  const phoneNumberRegex = `(\\+|00)[0-9]{1,3}[0-9]{4,14}(?:x.+)?$`
+  const emailRegex = `^([a-zA-Z0-9_.-])+(\\+[a-zA-Z0-9-]+)?@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})`
 
   // MODAL HTML
   const modal = `
-    <div class="Magic__formContainer ${
-      props.isDarkMode ? `Magic__dark` : ``
-    }" id="MagicModalBody">
+    <div class="Magic__formContainer ${props.isDarkMode ? `Magic__dark` : ``}" id="MagicModalBody">
       <button class="Magic__closeButton" id="MagicCloseBtn">&times;</button>
       <div class="Magic__formHeader">
         ${
@@ -123,7 +121,7 @@ export const createModal = async (props: {
                       : ``
                   }
                 </button>
-              `;
+              `
             })
             .join('')}
         </div>
@@ -136,74 +134,72 @@ export const createModal = async (props: {
         }
       </div>
     </div>
-  `;
+  `
 
   // ADD FORM TO BODY
-  const overlay = document.createElement('div');
-  overlay.classList.add('Magic__formOverlay');
-  if (props.isDarkMode) overlay.classList.add('Magic__dark');
-  document.body.appendChild(overlay);
-  overlay.innerHTML = modal;
-  const formBody = document.getElementById('MagicModalBody');
+  const overlay = document.createElement('div')
+  overlay.classList.add('Magic__formOverlay')
+  if (props.isDarkMode) overlay.classList.add('Magic__dark')
+  document.body.appendChild(overlay)
+  overlay.innerHTML = modal
+  const formBody = document.getElementById('MagicModalBody')
   setTimeout(() => {
-    if (formBody) formBody.style.transform = 'translate(-50%, -50%) scale(1)';
-  }, 100);
+    if (formBody) formBody.style.transform = 'translate(-50%, -50%) scale(1)'
+  }, 100)
 
   // FORM SUBMIT HANDLER
   const removeForm = () => {
-    if (formBody) formBody.style.transform = 'translate(-50%, -50%) scale(0)';
+    if (formBody) formBody.style.transform = 'translate(-50%, -50%) scale(0)'
     setTimeout(() => {
-      overlay.remove();
-    }, 200);
-  };
+      overlay.remove()
+    }, 200)
+  }
 
   return new Promise((resolve) => {
     // FORM CLOSE BUTTON
     document.getElementById('MagicCloseBtn')?.addEventListener('click', () => {
-      removeForm();
+      removeForm()
       resolve({
         email: '',
         phoneNumber: '',
         isGoogle: false,
         isDiscord: false,
-      });
-    });
+      })
+    })
 
     // EMAIL FORM SUBMIT HANDLER
     document.getElementById('MagicForm')?.addEventListener('submit', (e) => {
-      e.preventDefault();
+      e.preventDefault()
       const formInputField = document.getElementById(
-        'MagicFormInput'
-      ) as HTMLInputElement;
-      const isFormValid = formInputField?.checkValidity();
+        'MagicFormInput',
+      ) as HTMLInputElement
+      const isFormValid = formInputField?.checkValidity()
       if (isFormValid) {
-        let output;
+        let output
         if (RegExp(phoneNumberRegex).test(formInputField.value)) {
           output = {
             phoneNumber: formInputField?.value,
-          };
+          }
         } else {
           output = {
             email: formInputField?.value,
-          };
+          }
         }
-        removeForm();
-        resolve(output);
+        removeForm()
+        resolve(output)
       }
-    });
+    })
 
     // OAUTH BUTTONS
     providers?.forEach((provider) => {
-      const oauthButton = document.getElementById(
-        `MagicOauth${provider?.name}`
-      );
+      const oauthButton = document.getElementById(`MagicOauth${provider?.name}`)
       oauthButton?.addEventListener('click', () => {
         const output = {
           oauthProvider: provider?.name as OAuthProvider,
-        };
-        removeForm();
-        resolve(output);
-      });
-    });
-  });
-};
+        }
+        removeForm()
+        resolve(output)
+      })
+    })
+  })
+}
