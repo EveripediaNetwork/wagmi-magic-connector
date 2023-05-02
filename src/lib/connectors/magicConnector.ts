@@ -79,7 +79,7 @@ export abstract class MagicConnector extends Connector {
     const magic = this.getMagicSDK()
     try {
       return await magic.user.isLoggedIn()
-    } catch (e) {
+    } catch {
       return false
     }
   }

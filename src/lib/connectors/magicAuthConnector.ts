@@ -63,7 +63,7 @@ export class MagicAuthConnector extends MagicConnector {
     let chainId: number
     try {
       chainId = await this.getChainId()
-    } catch (e) {
+    } catch {
       chainId = 0
     }
 
