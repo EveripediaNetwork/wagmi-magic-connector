@@ -108,9 +108,6 @@ export class MagicAuthConnector extends MagicConnector {
           phoneNumber: modalOutput.phoneNumber,
         })
 
-      const isLoggedIn = await magic.user.isLoggedIn()
-      console.log({ isLoggedIn })
-
       if (await magic.user.isLoggedIn())
         return {
           account: await this.getAccount(),
