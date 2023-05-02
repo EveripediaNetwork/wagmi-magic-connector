@@ -31,16 +31,9 @@
 		"tsc-esm-fix": "^2.20.10"
 	},
 	"devDependencies": {
-		"@typescript-eslint/eslint-plugin": "^5.30.7",
-		"@typescript-eslint/parser": "^5.30.7",
 		"changeset": "^0.2.6",
-		"eslint": "^8.20.0",
-		"eslint-config-prettier": "^8.5.0",
-		"eslint-plugin-eslint-comments": "^3.2.0",
-		"eslint-plugin-import": "^2.26.0",
 		"ethers": "^5.7.2",
 		"npm-run-all": "^4.1.5",
-		"prettier": "^2.7.1",
 		"rome": "12.0.0",
 		"typescript": "^4.7.4"
 	},
@@ -51,9 +44,6 @@
 		"build/main", "build/module", "!**/*.spec.*", "!**/*.json", "CHANGELOG.md",
 		"LICENSE", "README.md"
 	],
-	"prettier": {
-		"singleQuote": true
-	},
 	"publishConfig": {
 		"access": "public"
 	}
