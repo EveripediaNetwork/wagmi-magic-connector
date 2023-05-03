@@ -184,4 +184,4 @@ export const modalStyles = (accentColor = '#6452f7') => `
     font-size: 16px;
     text-transform: capitalize;
   }
-`;
+`

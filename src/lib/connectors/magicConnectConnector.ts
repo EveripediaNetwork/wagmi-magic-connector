@@ -1,21 +1,21 @@
-import { Magic } from 'magic-sdk';
+import { Magic } from "magic-sdk";
 import {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
   SDKBase,
-} from '@magic-sdk/provider';
-import { ConnectExtension } from '@magic-ext/connect';
+} from "@magic-sdk/provider";
+import { ConnectExtension } from "@magic-ext/connect";
 import {
   Address,
   Chain,
   normalizeChainId,
   UserRejectedRequestError,
   Connector,
-} from '@wagmi/core';
-import { AbstractProvider } from 'web3-core';
-import { RPCProviderModule } from '@magic-sdk/provider/dist/types/modules/rpc-provider';
-import { ethers, Signer } from 'ethers';
-import { getAddress } from 'ethers/lib/utils.js';
+} from "@wagmi/core";
+import { AbstractProvider } from "web3-core";
+import { RPCProviderModule } from "@magic-sdk/provider/dist/types/modules/rpc-provider";
+import { ethers, Signer } from "ethers";
+import { getAddress } from "ethers/lib/utils.js";
 
 // Define the interface for MagicConnector options
 export interface MagicConnectorOptions {
@@ -25,8 +25,8 @@ export interface MagicConnectorOptions {
 
 // MagicConnectConnector class extends the base wagmi Connector class
 export class MagicConnectConnector extends Connector {
-  readonly id = 'magic';
-  readonly name = 'Magic';
+  readonly id = "magic";
+  readonly name = "Magic";
   readonly ready = true;
   provider: RPCProviderModule & AbstractProvider;
   magic: InstanceWithExtensions<SDKBase, ConnectExtension[]>;
@@ -48,7 +48,7 @@ export class MagicConnectConnector extends Connector {
   // Private method to initialize the Magic instance
   private initializeMagicInstance() {
     const { apiKey, magicSdkConfiguration } = this.options;
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       this.magic = new Magic(apiKey, {
         ...magicSdkConfiguration,
         extensions: [new ConnectExtension()],
@@ -87,9 +87,9 @@ export class MagicConnectConnector extends Connector {
     provider: RPCProviderModule & AbstractProvider
   ) {
     if (provider.on) {
-      provider.on('accountsChanged', this.onAccountsChanged);
-      provider.on('chainChanged', this.onChainChanged);
-      provider.on('disconnect', this.onDisconnect);
+      provider.on("accountsChanged", this.onAccountsChanged);
+      provider.on("chainChanged", this.onChainChanged);
+      provider.on("disconnect", this.onDisconnect);
     }
   }
 
@@ -97,9 +97,9 @@ export class MagicConnectConnector extends Connector {
   async disconnect(): Promise<void> {
     try {
       await this.magic.wallet.disconnect();
-      this.emit('disconnect');
+      this.emit("disconnect");
     } catch (error) {
-      console.error('Error disconnecting from Magic SDK:', error);
+      console.error("Error disconnecting from Magic SDK:", error);
     }
   }
 
@@ -114,17 +114,17 @@ export class MagicConnectConnector extends Connector {
   async getChainId(): Promise<number> {
     if (this.provider) {
       const chainId = await this.provider.request({
-        method: 'eth_chainId',
+        method: "eth_chainId",
         params: [],
       });
       return normalizeChainId(chainId);
     }
     const networkOptions = this.options.magicSdkConfiguration?.network;
-    if (typeof networkOptions === 'object') {
+    if (typeof networkOptions === "object") {
       const chainID = networkOptions.chainId;
       if (chainID) return normalizeChainId(chainID);
     }
-    throw new Error('Chain ID is not defined');
+    throw new Error("Chain ID is not defined");
   }
 
   // Get the Magic Instance provider
@@ -155,20 +155,20 @@ export class MagicConnectConnector extends Connector {
 
   // Event handler for accountsChanged event
   onAccountsChanged = (accounts: string[]): void => {
-    if (accounts.length === 0) this.emit('disconnect');
-    else this.emit('change', { account: getAddress(accounts[0]) });
+    if (accounts.length === 0) this.emit("disconnect");
+    else this.emit("change", { account: getAddress(accounts[0]) });
   };
 
   // Event handler for chainChanged event
   onChainChanged = (chainId: string | number): void => {
     const id = normalizeChainId(chainId);
     const unsupported = this.isChainUnsupported(id);
-    this.emit('change', { chain: { id, unsupported } });
+    this.emit("change", { chain: { id, unsupported } });
   };
 
   // Event handler for disconnect event
   onDisconnect = (): void => {
-    this.emit('disconnect');
+    this.emit("disconnect");
   };
 
   async switchChain(chainId: number): Promise<Chain> {
@@ -181,9 +181,9 @@ export class MagicConnectConnector extends Connector {
     const account = await this.getAccount();
 
     if (this.provider.off) {
-      this.provider.off('accountsChanged', this.onAccountsChanged);
-      this.provider.off('chainChanged', this.onChainChanged);
-      this.provider.off('disconnect', this.onDisconnect);
+      this.provider.off("accountsChanged", this.onAccountsChanged);
+      this.provider.off("chainChanged", this.onChainChanged);
+      this.provider.off("disconnect", this.onDisconnect);
     }
 
     this.magic = new Magic(this.apiKey, {
