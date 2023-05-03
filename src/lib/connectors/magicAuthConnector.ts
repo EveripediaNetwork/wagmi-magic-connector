@@ -7,7 +7,6 @@ import {
 } from '@magic-sdk/provider'
 import { Chain, UserRejectedRequestError, normalizeChainId } from '@wagmi/core'
 import { Magic } from 'magic-sdk'
-
 import { MagicConnector, MagicOptions } from './magicConnector'
 
 interface MagicAuthOptions extends MagicOptions {
@@ -41,16 +40,23 @@ export class MagicAuthConnector extends MagicConnector {
     this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl
     this.enableSMSLogin = config.options.enableSMSLogin
     this.enableEmailLogin = config.options.enableEmailLogin
+
+    const fetchOauthAccount = async () => {
+      if (typeof window !== 'undefined') {
+        const magic = this.getMagicSDK()
+        try {
+          await magic.oauth.getRedirectResult()
+        } catch {}
+      }
+    }
+
+    fetchOauthAccount()
   }
 
   async connect() {
-    console.log(`
-    ------------------------------  
-      🌊 Connecting to Magic...
-    ------------------------------
-    `)
     if (!this.magicOptions.apiKey)
       throw new Error('Magic API Key is not provided.')
+
     const provider = await this.getProvider()
 
     if (provider.on) {
