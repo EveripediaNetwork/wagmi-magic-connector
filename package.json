@@ -1,12 +1,16 @@
 {
 	"name": "@everipedia/wagmi-magic-connector",
-	"version": "0.11.0",
+	"version": "0.12.0",
 	"description": "wagmi connector to connect with Magic SDK",
 	"main": "build/module/index.js",
 	"type": "module",
 	"repository": "https://github.com/EveripediaNetwork/wagmi-magic-connector",
 	"license": "MIT",
-	"keywords": ["wagmi", "extension", "magic"],
+	"keywords": [
+		"wagmi",
+		"extension",
+		"magic"
+	],
 	"scripts": {
 		"build": "run-p build:*",
 		"build:main": "tsc -p tsconfig.json",
@@ -41,8 +45,13 @@
 		"ethers": "^5.7.1"
 	},
 	"files": [
-		"build/main", "build/module", "!**/*.spec.*", "!**/*.json", "CHANGELOG.md",
-		"LICENSE", "README.md"
+		"build/main",
+		"build/module",
+		"!**/*.spec.*",
+		"!**/*.json",
+		"CHANGELOG.md",
+		"LICENSE",
+		"README.md"
 	],
 	"publishConfig": {
 		"access": "public"
