@@ -88,6 +88,7 @@ The following can be passed to connector options object:
 | enableEmailLogin      | true / false               | ✔️	                          | ❌                               | 🌟 (Optional) Makes modal to disable Email login if false. Default value is true                                                                                               |
 | OAuthOptions          | object                     | ✔️	                          | ❌                               | 🌟 (Optional) Makes modal to enable OAuth login according to configuration passed.                                                                                             |
 | magicSdkConfiguration | object                     | ✔️	                          | ✔️                              | 🛠️ (Optional) Pass additional options to Magic constructor (refer [Magic API documentation](https://magic.link/docs/api-reference/client-side-sdks/web#constructor) for more) |
+| networks              | array of EthNetworkConfiguration | ❌                     | ✔️                              | 🛠️ (Optional) Pass the list of network compatible to switch networks |
 
 ## `options.OAuthOptions`
 
