@@ -24,13 +24,9 @@ interface UserDetails {
 
 export abstract class MagicConnector extends Connector {
   ready = !IS_SERVER
-
   readonly id = 'magic'
-
   readonly name = 'Magic'
-
   isModalOpen = false
-
   magicOptions: MagicOptions
 
   protected constructor(config: { chains?: Chain[]; options: MagicOptions }) {

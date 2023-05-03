@@ -25,18 +25,13 @@ interface MagicAuthOptions extends MagicOptions {
 
 export class MagicAuthConnector extends MagicConnector {
   magicSDK?: InstanceWithExtensions<SDKBase, OAuthExtension[]>
-
   magicSdkConfiguration: MagicSDKAdditionalConfiguration<
     string,
     MagicSDKExtensionsOption<OAuthExtension['name']>
   >
-
   enableSMSLogin: boolean
-
   enableEmailLogin: boolean
-
   oauthProviders: OAuthProvider[]
-
   oauthCallbackUrl?: string
 
   constructor(config: { chains?: Chain[]; options: MagicAuthOptions }) {
@@ -49,6 +44,11 @@ export class MagicAuthConnector extends MagicConnector {
   }
 
   async connect() {
+    console.log(`
+    ------------------------------  
+      🌊 Connecting to Magic...
+    ------------------------------
+    `)
     if (!this.magicOptions.apiKey)
       throw new Error('Magic API Key is not provided.')
     const provider = await this.getProvider()
@@ -138,7 +138,6 @@ export class MagicAuthConnector extends MagicConnector {
         ...this.magicSdkConfiguration,
         extensions: [new OAuthExtension()],
       })
-      return this.magicSDK
     }
     return this.magicSDK
   }
