@@ -72,9 +72,14 @@ export abstract class MagicConnector extends Connector {
   }
 
   async isAuthorized() {
-    const magic = this.getMagicSDK()
     try {
-      return await magic.user.isLoggedIn()
+      const magic = this.getMagicSDK()
+
+      const isLoggedIn = await magic.user.isLoggedIn()
+      if (isLoggedIn) return true
+
+      const result = await magic.oauth.getRedirectResult()
+      return result !== null
     } catch {
       return false
     }

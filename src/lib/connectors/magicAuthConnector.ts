@@ -40,17 +40,6 @@ export class MagicAuthConnector extends MagicConnector {
     this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl
     this.enableSMSLogin = config.options.enableSMSLogin
     this.enableEmailLogin = config.options.enableEmailLogin
-
-    const fetchOauthAccount = async () => {
-      if (typeof window !== 'undefined') {
-        const magic = this.getMagicSDK()
-        try {
-          await magic.oauth.getRedirectResult()
-        } catch {}
-      }
-    }
-
-    fetchOauthAccount()
   }
 
   async connect() {
