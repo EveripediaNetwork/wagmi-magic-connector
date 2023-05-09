@@ -1,12 +1,32 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.12.0
+
+### Minor Changes
+
+- c09ccc0: Add support for switchChain for MagicConnectConnector
+  You can now pass a list of network accepted to switch chain
+  ```ts
+  new MagicConnectConnector({
+    chains: chains,
+    options: {
+      apiKey: environment.MAGIC_API_KEY,
+      networks: [
+        { chainId: 1, rpcUrl: "https://your-ethereum-rpc-url" },
+        { chainId: 137, rpcUrl: "https://your-polygon-rpc-url" },
+        // ...
+      ],
+    },
+  });
+  ```
+
 ## 0.11.0
 
 ### Minor Changes
 
 - 58b39f3: Update Magic Connect Connector to use Magic Connect's Modal UI
-  - This will use Magic Connect's Modal instead of homemade one.  
-  - Remove the styling props to constructor for migration 
+  - This will use Magic Connect's Modal instead of homemade one.
+  - Remove the styling props to constructor for migration
 
 ## 0.10.1
 

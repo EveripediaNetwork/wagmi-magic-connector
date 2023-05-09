@@ -4,6 +4,7 @@ import {
   MagicSDKAdditionalConfiguration,
   SDKBase,
 } from '@magic-sdk/provider'
+import { EthNetworkConfiguration } from '@magic-sdk/types'
 import { ConnectExtension } from '@magic-ext/connect'
 import {
   Address,
@@ -21,10 +22,14 @@ import { getAddress } from 'ethers/lib/utils.js'
 export interface MagicConnectorOptions {
   apiKey: string
   magicSdkConfiguration?: MagicSDKAdditionalConfiguration
+  networks?: EthNetworkConfiguration[]
 }
 
 // MagicConnectConnector class extends the base wagmi Connector class
-export class MagicConnectConnector extends Connector {
+export class MagicConnectConnector extends Connector<
+  any,
+  MagicConnectorOptions
+> {
   readonly id = 'magic'
   readonly name = 'Magic'
   readonly ready = true
@@ -40,10 +45,11 @@ export class MagicConnectConnector extends Connector {
 
   // Private method to initialize the Magic instance
   private initializeMagicInstance() {
-    const { apiKey, magicSdkConfiguration } = this.options
+    const { apiKey, magicSdkConfiguration, networks } = this.options
     if (typeof window !== 'undefined') {
       this.magic = new Magic(apiKey, {
         ...magicSdkConfiguration,
+        network: magicSdkConfiguration?.network || networks?.[0],
         extensions: [new ConnectExtension()],
       })
 
@@ -105,6 +111,13 @@ export class MagicConnectConnector extends Connector {
 
   // Get chain ID
   async getChainId(): Promise<number> {
+    if (this.provider) {
+      const chainId = await this.provider.request({
+        method: 'eth_chainId',
+        params: [],
+      })
+      return normalizeChainId(chainId)
+    }
     const networkOptions = this.options.magicSdkConfiguration?.network
     if (typeof networkOptions === 'object') {
       const chainID = networkOptions.chainId
@@ -153,5 +166,44 @@ export class MagicConnectConnector extends Connector {
   // Event handler for disconnect event
   onDisconnect = (): void => {
     this.emit('disconnect')
+  }
+
+  async switchChain(chainId: number): Promise<Chain> {
+    if (!this.options.networks)
+      throw new Error(
+        'switch chain not supported: please provide networks in options',
+      )
+    const normalizedChainId = normalizeChainId(chainId)
+    const chain = this.chains.find((x) => x.id === normalizedChainId)
+    if (!chain) throw new Error(`Unsupported chainId: ${chainId}`)
+    const network = this.options.networks.find((x) =>
+      typeof x === 'object'
+        ? normalizeChainId(x.chainId) === normalizedChainId
+        : normalizeChainId(x) === normalizedChainId,
+    )
+    if (!network) throw new Error(`Unsupported chainId: ${chainId}`)
+
+    const account = await this.getAccount()
+
+    if (this.provider.off) {
+      this.provider.off('accountsChanged', this.onAccountsChanged)
+      this.provider.off('chainChanged', this.onChainChanged)
+      this.provider.off('disconnect', this.onDisconnect)
+    }
+
+    this.magic = new Magic(this.options.apiKey, {
+      ...this.options.magicSdkConfiguration,
+      network: network,
+      extensions: [new ConnectExtension()],
+    })
+
+    this.provider = this.magic.rpcProvider
+    this.registerProviderEventListeners(this.provider)
+
+    this.onChainChanged(chain.id)
+
+    this.onAccountsChanged([account])
+
+    return chain
   }
 }
