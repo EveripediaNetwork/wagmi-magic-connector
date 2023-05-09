@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 0.12.1
+
+### Patch Changes
+
+- 897ed1f: Fixes magic auth not working with oauth login. updates magic sdk and wagmi versions to latest
+
 ## 0.12.0
 
 ### Minor Changes
