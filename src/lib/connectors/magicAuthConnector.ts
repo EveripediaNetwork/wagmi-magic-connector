@@ -5,14 +5,8 @@ import {
   MagicSDKExtensionsOption,
   SDKBase,
 } from '@magic-sdk/provider'
-import {
-  Address,
-  Chain,
-  normalizeChainId,
-  UserRejectedRequestError,
-} from '@wagmi/core'
+import { Chain, UserRejectedRequestError, normalizeChainId } from '@wagmi/core'
 import { Magic } from 'magic-sdk'
-
 import { MagicConnector, MagicOptions } from './magicConnector'
 
 interface MagicAuthOptions extends MagicOptions {
@@ -30,18 +24,13 @@ interface MagicAuthOptions extends MagicOptions {
 
 export class MagicAuthConnector extends MagicConnector {
   magicSDK?: InstanceWithExtensions<SDKBase, OAuthExtension[]>
-
   magicSdkConfiguration: MagicSDKAdditionalConfiguration<
     string,
     MagicSDKExtensionsOption<OAuthExtension['name']>
   >
-
   enableSMSLogin: boolean
-
   enableEmailLogin: boolean
-
   oauthProviders: OAuthProvider[]
-
   oauthCallbackUrl?: string
 
   constructor(config: { chains?: Chain[]; options: MagicAuthOptions }) {
@@ -56,86 +45,75 @@ export class MagicAuthConnector extends MagicConnector {
   async connect() {
     if (!this.magicOptions.apiKey)
       throw new Error('Magic API Key is not provided.')
-    try {
-      const provider = await this.getProvider()
 
-      if (provider.on) {
-        provider.on('accountsChanged', this.onAccountsChanged)
-        provider.on('chainChanged', this.onChainChanged)
-        provider.on('disconnect', this.onDisconnect)
-      }
+    const provider = await this.getProvider()
 
-      // Check if there is a user logged in
-      const isAuthenticated = await this.isAuthorized()
-
-      // Check if we have a chainId, in case of error just assign 0 for legacy
-      let chainId: number
-      try {
-        chainId = await this.getChainId()
-      } catch {
-        chainId = 0
-      }
-
-      // if there is a user logged in, return the user
-      if (isAuthenticated) {
-        return {
-          provider,
-          chain: {
-            id: chainId,
-            unsupported: false,
-          },
-          account: await this.getAccount(),
-        }
-      }
-
-      // open the modal and process the magic login steps
-      if (!this.isModalOpen) {
-        const output = await this.getUserDetailsByForm(
-          this.enableSMSLogin,
-          this.enableEmailLogin,
-          this.oauthProviders,
-        )
-        const magic = this.getMagicSDK()
-
-        // LOGIN WITH MAGIC LINK WITH OAUTH PROVIDER
-        if (output.oauthProvider) {
-          await magic.oauth.loginWithRedirect({
-            provider: output.oauthProvider,
-            redirectURI: this.oauthCallbackUrl || window.location.href,
-          })
-        }
-
-        // LOGIN WITH MAGIC LINK WITH EMAIL
-        if (output.email) {
-          await magic.auth.loginWithMagicLink({
-            email: output.email,
-          })
-        }
-
-        // LOGIN WITH MAGIC LINK WITH PHONE NUMBER
-        if (output.phoneNumber) {
-          await magic.auth.loginWithSMS({
-            phoneNumber: output.phoneNumber,
-          })
-        }
-
-        const signer = await this.getSigner()
-        let account = (await signer.getAddress()) as Address
-        if (!account.startsWith('0x')) account = `0x${account}`
-
-        return {
-          account,
-          chain: {
-            id: chainId,
-            unsupported: false,
-          },
-          provider,
-        }
-      }
-      throw new UserRejectedRequestError('User rejected request')
-    } catch {
-      throw new UserRejectedRequestError('Something went wrong')
+    if (provider.on) {
+      provider.on('accountsChanged', this.onAccountsChanged)
+      provider.on('chainChanged', this.onChainChanged)
+      provider.on('disconnect', this.onDisconnect)
     }
+
+    // Check if we have a chainId, in case of error just assign 0 for legacy
+    let chainId: number
+    try {
+      chainId = await this.getChainId()
+    } catch {
+      chainId = 0
+    }
+
+    // if there is a user logged in, return the user
+    if (await this.isAuthorized()) {
+      return {
+        provider,
+        chain: {
+          id: chainId,
+          unsupported: false,
+        },
+        account: await this.getAccount(),
+      }
+    }
+
+    // open the modal and process the magic login steps
+    if (!this.isModalOpen) {
+      const modalOutput = await this.getUserDetailsByForm(
+        this.enableSMSLogin,
+        this.enableEmailLogin,
+        this.oauthProviders,
+      )
+
+      const magic = this.getMagicSDK()
+
+      // LOGIN WITH MAGIC LINK WITH OAUTH PROVIDER
+      if (modalOutput.oauthProvider)
+        await magic.oauth.loginWithRedirect({
+          provider: modalOutput.oauthProvider,
+          redirectURI: this.oauthCallbackUrl || window.location.href,
+        })
+
+      // LOGIN WITH MAGIC LINK WITH EMAIL
+      if (modalOutput.email)
+        await magic.auth.loginWithMagicLink({
+          email: modalOutput.email,
+        })
+
+      // LOGIN WITH MAGIC LINK WITH PHONE NUMBER
+      if (modalOutput.phoneNumber)
+        await magic.auth.loginWithSMS({
+          phoneNumber: modalOutput.phoneNumber,
+        })
+
+      if (await magic.user.isLoggedIn())
+        return {
+          account: await this.getAccount(),
+          chain: {
+            id: chainId,
+            unsupported: false,
+          },
+          provider,
+        }
+    }
+    throw new UserRejectedRequestError('User rejected request')
   }
 
   async getChainId(): Promise<number> {
@@ -155,7 +133,6 @@ export class MagicAuthConnector extends MagicConnector {
         ...this.magicSdkConfiguration,
         extensions: [new OAuthExtension()],
       })
-      return this.magicSDK
     }
     return this.magicSDK
   }

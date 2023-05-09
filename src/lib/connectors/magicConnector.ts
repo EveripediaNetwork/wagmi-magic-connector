@@ -1,10 +1,8 @@
 import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth'
 import { InstanceWithExtensions, SDKBase } from '@magic-sdk/provider'
-import { RPCProviderModule } from '@magic-sdk/provider/dist/types/modules/rpc-provider'
 import { Address, Chain, Connector, normalizeChainId } from '@wagmi/core'
-import { ethers, Signer } from 'ethers'
+import { Signer, ethers } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
-import { AbstractProvider } from 'web3-core'
 
 import { createModal } from '../modal/view'
 
@@ -26,15 +24,9 @@ interface UserDetails {
 
 export abstract class MagicConnector extends Connector {
   ready = !IS_SERVER
-
   readonly id = 'magic'
-
   readonly name = 'Magic'
-
-  provider: RPCProviderModule & AbstractProvider
-
   isModalOpen = false
-
   magicOptions: MagicOptions
 
   protected constructor(config: { chains?: Chain[]; options: MagicOptions }) {
@@ -43,8 +35,7 @@ export abstract class MagicConnector extends Connector {
   }
 
   async getAccount(): Promise<Address> {
-    const provider = new ethers.providers.Web3Provider(await this.getProvider())
-    const signer = provider.getSigner()
+    const signer = await this.getSigner()
     const account = await signer.getAddress()
     if (account.startsWith('0x')) return account as Address
     return `0x${account}`
@@ -70,24 +61,25 @@ export abstract class MagicConnector extends Connector {
   }
 
   async getProvider() {
-    if (this.provider) {
-      return this.provider
-    }
     const magic = this.getMagicSDK()
-    this.provider = magic.rpcProvider
-    return this.provider
+    return new ethers.providers.Web3Provider(magic.rpcProvider)
   }
 
   async getSigner(): Promise<Signer> {
-    const provider = new ethers.providers.Web3Provider(await this.getProvider())
-    const signer = await provider.getSigner()
+    const provider = await this.getProvider()
+    const signer = provider.getSigner()
     return signer
   }
 
   async isAuthorized() {
-    const magic = this.getMagicSDK()
     try {
-      return await magic.user.isLoggedIn()
+      const magic = this.getMagicSDK()
+
+      const isLoggedIn = await magic.user.isLoggedIn()
+      if (isLoggedIn) return true
+
+      const result = await magic.oauth.getRedirectResult()
+      return result !== null
     } catch {
       return false
     }
