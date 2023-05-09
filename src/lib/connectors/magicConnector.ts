@@ -1,10 +1,10 @@
 import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth'
 import { InstanceWithExtensions, SDKBase } from '@magic-sdk/provider'
-import { Address, Chain, Connector, normalizeChainId } from '@wagmi/core'
-import { Signer, ethers } from 'ethers'
-import { getAddress } from 'ethers/lib/utils'
+import { Chain, Connector } from '@wagmi/core'
 
+import { createWalletClient, custom, getAddress } from 'viem'
 import { createModal } from '../modal/view'
+import { normalizeChainId } from '../utils'
 
 const IS_SERVER = typeof window === 'undefined'
 
@@ -34,11 +34,13 @@ export abstract class MagicConnector extends Connector {
     this.magicOptions = config.options
   }
 
-  async getAccount(): Promise<Address> {
-    const signer = await this.getSigner()
-    const account = await signer.getAddress()
-    if (account.startsWith('0x')) return account as Address
-    return `0x${account}`
+  async getAccount() {
+    const provider = await this.getProvider()
+    const accounts = await provider.request({
+      method: 'eth_accounts',
+    })
+    const account = getAddress(accounts[0] as string)
+    return account
   }
 
   async getUserDetailsByForm(
@@ -60,15 +62,21 @@ export abstract class MagicConnector extends Connector {
     return output
   }
 
-  async getProvider() {
-    const magic = this.getMagicSDK()
-    return new ethers.providers.Web3Provider(magic.rpcProvider)
+  async getWalletClient({ chainId }: { chainId?: number } = {}) {
+    const provider = await this.getProvider()
+    const account = await this.getAccount()
+    const chain = this.chains.find((x) => x.id === chainId) || this.chains[0]
+    if (!provider) throw new Error('provider is required.')
+    return createWalletClient({
+      account,
+      chain,
+      transport: custom(provider),
+    })
   }
 
-  async getSigner(): Promise<Signer> {
-    const provider = await this.getProvider()
-    const signer = provider.getSigner()
-    return signer
+  async getProvider() {
+    const magic = this.getMagicSDK()
+    return magic.rpcProvider
   }
 
   async isAuthorized() {
@@ -86,7 +94,7 @@ export abstract class MagicConnector extends Connector {
   }
 
   protected onAccountsChanged(accounts: string[]): void {
-    if (accounts.length === 0) this.emit('disconnect')
+    if (accounts.length === 0 || !accounts[0]) this.emit('disconnect')
     else this.emit('change', { account: getAddress(accounts[0]) })
   }
 

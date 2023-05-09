@@ -6,17 +6,9 @@ import {
 } from '@magic-sdk/provider'
 import { EthNetworkConfiguration } from '@magic-sdk/types'
 import { ConnectExtension } from '@magic-ext/connect'
-import {
-  Address,
-  Chain,
-  normalizeChainId,
-  UserRejectedRequestError,
-  Connector,
-} from '@wagmi/core'
-import { AbstractProvider } from 'web3-core'
+import { Address, Chain, Connector } from '@wagmi/core'
 import { RPCProviderModule } from '@magic-sdk/provider/dist/types/modules/rpc-provider'
-import { ethers, Signer } from 'ethers'
-import { getAddress } from 'ethers/lib/utils.js'
+import { UserRejectedRequestError } from 'viem'
 
 // Define the interface for MagicConnector options
 export interface MagicConnectorOptions {
@@ -33,7 +25,7 @@ export class MagicConnectConnector extends Connector<
   readonly id = 'magic'
   readonly name = 'Magic'
   readonly ready = true
-  provider: RPCProviderModule & AbstractProvider
+  provider: RPCProviderModule
   magic: InstanceWithExtensions<SDKBase, ConnectExtension[]>
 
   // Constructor initializes the Magic instance
@@ -82,9 +74,7 @@ export class MagicConnectConnector extends Connector<
   }
 
   // Private method to register event listeners for the provider
-  private registerProviderEventListeners(
-    provider: RPCProviderModule & AbstractProvider,
-  ) {
+  private registerProviderEventListeners(provider: RPCProviderModule) {
     if (provider.on) {
       provider.on('accountsChanged', this.onAccountsChanged)
       provider.on('chainChanged', this.onChainChanged)

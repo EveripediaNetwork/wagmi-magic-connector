@@ -5,9 +5,10 @@ import {
   MagicSDKExtensionsOption,
   SDKBase,
 } from '@magic-sdk/provider'
-import { Chain, UserRejectedRequestError, normalizeChainId } from '@wagmi/core'
+import { Chain } from '@wagmi/core'
 import { Magic } from 'magic-sdk'
 import { MagicConnector, MagicOptions } from './magicConnector'
+import { normalizeChainId } from '../utils'
 
 interface MagicAuthOptions extends MagicOptions {
   enableEmailLogin?: boolean
@@ -24,7 +25,7 @@ interface MagicAuthOptions extends MagicOptions {
 
 export class MagicAuthConnector extends MagicConnector {
   magicSDK?: InstanceWithExtensions<SDKBase, OAuthExtension[]>
-  magicSdkConfiguration: MagicSDKAdditionalConfiguration<
+  magicSdkConfiguration?: MagicSDKAdditionalConfiguration<
     string,
     MagicSDKExtensionsOption<OAuthExtension['name']>
   >
@@ -38,8 +39,8 @@ export class MagicAuthConnector extends MagicConnector {
     this.magicSdkConfiguration = config.options.magicSdkConfiguration
     this.oauthProviders = config.options.oauthOptions?.providers || []
     this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl
-    this.enableSMSLogin = config.options.enableSMSLogin
-    this.enableEmailLogin = config.options.enableEmailLogin
+    this.enableSMSLogin = config.options.enableSMSLogin || false
+    this.enableEmailLogin = config.options.enableEmailLogin || true
   }
 
   async connect() {
@@ -113,7 +114,7 @@ export class MagicAuthConnector extends MagicConnector {
           provider,
         }
     }
-    throw new UserRejectedRequestError('User rejected request')
+    throw new Error('User rejected request')
   }
 
   async getChainId(): Promise<number> {
