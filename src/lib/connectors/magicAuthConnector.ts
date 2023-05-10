@@ -95,7 +95,7 @@ export class MagicAuthConnector extends MagicConnector {
 
     const provider = await this.getProvider()
 
-    if (provider.on) {
+    if (provider?.on) {
       provider.on('accountsChanged', this.onAccountsChanged)
       provider.on('chainChanged', this.onChainChanged)
       provider.on('disconnect', this.onDisconnect)

@@ -37,7 +37,7 @@ export abstract class MagicConnector extends Connector {
 
   async getAccount() {
     const provider = await this.getProvider()
-    const accounts = await provider.request({
+    const accounts = await provider?.request({
       method: 'eth_accounts',
     })
     const account = getAddress(accounts[0] as string)
@@ -58,7 +58,7 @@ export abstract class MagicConnector extends Connector {
 
   async getProvider() {
     const magic = this.getMagicSDK()
-    return magic.rpcProvider
+    return magic?.rpcProvider
   }
 
   protected onAccountsChanged(accounts: string[]): void {
@@ -96,7 +96,7 @@ export abstract class MagicConnector extends Connector {
   async disconnect(): Promise<void> {
     try {
       const magic = this.getMagicSDK()
-      await magic.wallet.disconnect()
+      await magic?.wallet.disconnect()
       this.emit('disconnect')
     } catch (error) {
       console.error('Error disconnecting from Magic SDK:', error)
@@ -106,4 +106,5 @@ export abstract class MagicConnector extends Connector {
   abstract getMagicSDK():
     | InstanceWithExtensions<SDKBase, OAuthExtension[]>
     | InstanceWithExtensions<SDKBase, MagicSDKExtensionsOption<string>>
+    | null
 }

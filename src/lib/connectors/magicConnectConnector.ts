@@ -38,11 +38,12 @@ export interface MagicConnectorOptions {
  */
 
 export class MagicConnectConnector extends MagicConnector {
-  magic: InstanceWithExtensions<SDKBase, MagicSDKExtensionsOption<string>>
+  magic: InstanceWithExtensions<SDKBase, MagicSDKExtensionsOption<string>> | null
 
   constructor(config: { chains?: Chain[]; options: MagicConnectorOptions }) {
     super(config)
     this.magic = this.getMagicSDK()
+
   }
 
   /**
@@ -51,6 +52,9 @@ export class MagicConnectConnector extends MagicConnector {
    */
   getMagicSDK() {
     const { apiKey, magicSdkConfiguration, networks } = this.options
+    if(typeof window === 'undefined'){
+      return null
+    }
     if (this.magic) return this.magic
     this.magic = new Magic(apiKey, {
       ...magicSdkConfiguration,
@@ -65,10 +69,11 @@ export class MagicConnectConnector extends MagicConnector {
    * this will open a modal for the user to select their wallet
    */
   async connect() {
-    await this.magic.wallet.connectWithUI()
+    await this.magic?.wallet.connectWithUI()
     const provider = await this.getProvider()
     const chainId = await this.getChainId()
 
+    provider &&
     this.registerProviderEventListeners(provider)
 
     const account = await this.getAccount()
@@ -100,7 +105,7 @@ export class MagicConnectConnector extends MagicConnector {
    */
   async isAuthorized() {
     try {
-      const walletInfo = await this.magic.wallet.getInfo()
+      const walletInfo = await this.magic?.wallet.getInfo()
       return !!walletInfo
     } catch {
       return false
@@ -136,7 +141,7 @@ export class MagicConnectConnector extends MagicConnector {
     const account = await this.getAccount()
     const provider = await this.getProvider()
 
-    if (provider.off) {
+    if (provider?.off) {
       provider.off('accountsChanged', this.onAccountsChanged)
       provider.off('chainChanged', this.onChainChanged)
       provider.off('disconnect', this.onDisconnect)
