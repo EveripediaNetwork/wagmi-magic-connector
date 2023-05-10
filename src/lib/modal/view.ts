@@ -1,4 +1,4 @@
-import { OAuthProvider } from '@magic-ext/oauth'
+import type { OAuthProvider } from '@magic-ext/oauth'
 
 import {
   appleLogo,

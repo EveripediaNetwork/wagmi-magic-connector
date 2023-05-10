@@ -1,10 +1,12 @@
-import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth'
-import { InstanceWithExtensions, SDKBase } from '@magic-sdk/provider'
-import { Address, Chain, Connector, normalizeChainId } from '@wagmi/core'
-import { Signer, ethers } from 'ethers'
-import { getAddress } from 'ethers/lib/utils'
-
-import { createModal } from '../modal/view'
+import type { OAuthExtension } from '@magic-ext/oauth'
+import type {
+  InstanceWithExtensions,
+  MagicSDKExtensionsOption,
+  SDKBase,
+} from '@magic-sdk/provider'
+import { Chain, Connector } from '@wagmi/core'
+import { createWalletClient, custom, getAddress } from 'viem'
+import { normalizeChainId } from '../utils'
 
 const IS_SERVER = typeof window === 'undefined'
 
@@ -16,77 +18,56 @@ export interface MagicOptions {
   customHeaderText?: string
 }
 
-interface UserDetails {
-  email: string
-  phoneNumber: string
-  oauthProvider: OAuthProvider
-}
-
+/**
+ * Magic Connector class is a base class for Magic Auth and Magic Connect Connectors
+ * It implements the common functionality of both the connectors
+ *
+ * Magic Auth Connector and Magic Connect Connector are the two connectors provided by this library
+ * And both of them extend this class.
+ */
 export abstract class MagicConnector extends Connector {
   ready = !IS_SERVER
   readonly id = 'magic'
   readonly name = 'Magic'
   isModalOpen = false
-  magicOptions: MagicOptions
 
   protected constructor(config: { chains?: Chain[]; options: MagicOptions }) {
     super(config)
-    this.magicOptions = config.options
+    if (!config.options.apiKey) {
+      throw new Error(
+        'Magic API Key is required. Get one at https://dashboard.magic.link/',
+      )
+    }
   }
 
-  async getAccount(): Promise<Address> {
-    const signer = await this.getSigner()
-    const account = await signer.getAddress()
-    if (account.startsWith('0x')) return account as Address
-    return `0x${account}`
+  async getAccount() {
+    const provider = await this.getProvider()
+    const accounts = await provider?.request({
+      method: 'eth_accounts',
+    })
+    const account = getAddress(accounts[0] as string)
+    return account
   }
 
-  async getUserDetailsByForm(
-    enableSMSLogin: boolean,
-    enableEmailLogin: boolean,
-    oauthProviders: OAuthProvider[],
-  ): Promise<UserDetails> {
-    const output: UserDetails = (await createModal({
-      accentColor: this.magicOptions.accentColor,
-      isDarkMode: this.magicOptions.isDarkMode,
-      customLogo: this.magicOptions.customLogo,
-      customHeaderText: this.magicOptions.customHeaderText,
-      enableSMSLogin: enableSMSLogin,
-      enableEmailLogin: enableEmailLogin || true,
-      oauthProviders,
-    })) as UserDetails
-
-    this.isModalOpen = false
-    return output
+  async getWalletClient({ chainId }: { chainId?: number } = {}): Promise<any> {
+    const provider = await this.getProvider()
+    const account = await this.getAccount()
+    const chain = this.chains.find((x) => x.id === chainId) || this.chains[0]
+    if (!provider) throw new Error('provider is required.')
+    return createWalletClient({
+      account,
+      chain,
+      transport: custom(provider),
+    })
   }
 
   async getProvider() {
     const magic = this.getMagicSDK()
-    return new ethers.providers.Web3Provider(magic.rpcProvider)
-  }
-
-  async getSigner(): Promise<Signer> {
-    const provider = await this.getProvider()
-    const signer = provider.getSigner()
-    return signer
-  }
-
-  async isAuthorized() {
-    try {
-      const magic = this.getMagicSDK()
-
-      const isLoggedIn = await magic.user.isLoggedIn()
-      if (isLoggedIn) return true
-
-      const result = await magic.oauth.getRedirectResult()
-      return result !== null
-    } catch {
-      return false
-    }
+    return magic?.rpcProvider
   }
 
   protected onAccountsChanged(accounts: string[]): void {
-    if (accounts.length === 0) this.emit('disconnect')
+    if (accounts.length === 0 || !accounts[0]) this.emit('disconnect')
     else this.emit('change', { account: getAddress(accounts[0]) })
   }
 
@@ -96,14 +77,39 @@ export abstract class MagicConnector extends Connector {
     this.emit('change', { chain: { id, unsupported } })
   }
 
+  async getChainId(): Promise<number> {
+    const provider = await this.getProvider()
+    if (provider) {
+      const chainId = await provider.request({
+        method: 'eth_chainId',
+        params: [],
+      })
+      return normalizeChainId(chainId)
+    }
+    const networkOptions = this.options.magicSdkConfiguration?.network
+    if (typeof networkOptions === 'object') {
+      const chainID = networkOptions.chainId
+      if (chainID) return normalizeChainId(chainID)
+    }
+    throw new Error('Chain ID is not defined')
+  }
+
   protected onDisconnect(): void {
     this.emit('disconnect')
   }
 
   async disconnect(): Promise<void> {
-    const magic = this.getMagicSDK()
-    await magic.user.logout()
+    try {
+      const magic = this.getMagicSDK()
+      await magic?.wallet.disconnect()
+      this.emit('disconnect')
+    } catch (error) {
+      console.error('Error disconnecting from Magic SDK:', error)
+    }
   }
 
-  abstract getMagicSDK(): InstanceWithExtensions<SDKBase, OAuthExtension[]>
+  abstract getMagicSDK():
+    | InstanceWithExtensions<SDKBase, OAuthExtension[]>
+    | InstanceWithExtensions<SDKBase, MagicSDKExtensionsOption<string>>
+    | null
 }
