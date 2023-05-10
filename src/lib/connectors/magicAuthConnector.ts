@@ -1,14 +1,15 @@
 import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth'
-import {
+import type {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
   MagicSDKExtensionsOption,
   SDKBase,
 } from '@magic-sdk/provider'
-import { Chain } from '@wagmi/core'
+import type { Chain } from '@wagmi/core'
 import { Magic } from 'magic-sdk'
 import { createModal } from '../modal/view'
 import { MagicConnector, MagicOptions } from './magicConnector'
+import { UserRejectedRequestError } from 'viem'
 
 interface UserDetails {
   email: string
@@ -159,7 +160,7 @@ export class MagicAuthConnector extends MagicConnector {
           provider,
         }
     }
-    throw new Error('User rejected request')
+    throw new UserRejectedRequestError(Error('User Rejected Request'))
   }
 
   /**

@@ -1,13 +1,13 @@
 import { ConnectExtension } from '@magic-ext/connect'
-import {
+import type {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
   MagicSDKExtensionsOption,
   SDKBase,
 } from '@magic-sdk/provider'
-import { RPCProviderModule } from '@magic-sdk/provider/dist/types/modules/rpc-provider'
-import { EthNetworkConfiguration } from '@magic-sdk/types'
-import { Chain } from '@wagmi/core'
+import type { RPCProviderModule } from '@magic-sdk/provider/dist/types/modules/rpc-provider'
+import type { EthNetworkConfiguration } from '@magic-sdk/types'
+import type { Chain } from '@wagmi/core'
 import { Magic } from 'magic-sdk'
 import { normalizeChainId } from '../utils'
 import { MagicConnector } from './magicConnector'

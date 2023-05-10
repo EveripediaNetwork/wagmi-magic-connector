@@ -1,26 +1,19 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "baseUrl": ".",
-    "downlevelIteration": true,
+    "declaration": true,
+    "declarationDir": "dist",
     "esModuleInterop": true,
+    "importsNotUsedAsValues": "error",
     "isolatedModules": true,
-    "lib": ["es2019", "es2017", "dom"],
+    "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
-    "noEmit": true,
-    "noImplicitAny": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "outDir": "dist",
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "strictNullChecks": true,
-    "target": "ESNext",
-    "types": ["node"]
+    "types": ["node"],
+    "typeRoots": ["node_modules/@types"]
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules/**"],
-  "compileOnSave": false
+  "exclude": ["node_modules", "dist", "src/__test__/**", "**/*.md"]
 }

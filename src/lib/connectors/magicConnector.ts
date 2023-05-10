@@ -1,5 +1,5 @@
-import { OAuthExtension } from '@magic-ext/oauth'
-import {
+import type { OAuthExtension } from '@magic-ext/oauth'
+import type {
   InstanceWithExtensions,
   MagicSDKExtensionsOption,
   SDKBase,
@@ -44,7 +44,7 @@ export abstract class MagicConnector extends Connector {
     return account
   }
 
-  async getWalletClient({ chainId }: { chainId?: number } = {}) {
+  async getWalletClient({ chainId }: { chainId?: number } = {}): Promise<any> {
     const provider = await this.getProvider()
     const account = await this.getAccount()
     const chain = this.chains.find((x) => x.id === chainId) || this.chains[0]
