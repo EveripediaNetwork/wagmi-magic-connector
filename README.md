@@ -247,7 +247,7 @@ pass the ```client``` prop with ```createClient``` instance to the `WagmiConfig`
 // App.tsx
 
 // ...
-const { chains, provider, webSocketProvider } =
+const { chains, publicClient, webSocketPublicClient } =
   configureChains(YOUR_CHAIN_CONFIG);
 const connectors = connectorsForWallets([
   {
@@ -258,15 +258,15 @@ const connectors = connectorsForWallets([
     ],
   },
 ]);
-const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider,
-  webSocketProvider,
+const wagmiConfig = createConfig({
+	autoConnect: false,
+	connectors,
+	publicClient,
+	webSocketPublicClient
 });
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <WagmiConfig client={wagmiClient}>
+    <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains}>
         <Component {...pageProps} />
       </RainbowKitProvider>
@@ -278,4 +278,6 @@ export default MyApp;
 
 This procedure might change depending on the version of Rainbow kit you are using so please check the documentation of the Rainbow kit if it is not working.
 
-🔎 **Example repository:** https://github.com/Royal-lobster/Rainbowkit-Magic
+## **Example repositories:** 
+- https://github.com/Royal-lobster/vanilla-magic-example
+- https://github.com/Royal-lobster/rainbow-magic-example (With Rainbowkit 🌈)
