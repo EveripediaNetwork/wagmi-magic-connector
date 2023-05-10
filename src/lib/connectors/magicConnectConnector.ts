@@ -38,12 +38,14 @@ export interface MagicConnectorOptions {
  */
 
 export class MagicConnectConnector extends MagicConnector {
-  magic: InstanceWithExtensions<SDKBase, MagicSDKExtensionsOption<string>> | null
+  magic: InstanceWithExtensions<
+    SDKBase,
+    MagicSDKExtensionsOption<string>
+  > | null
 
   constructor(config: { chains?: Chain[]; options: MagicConnectorOptions }) {
     super(config)
     this.magic = this.getMagicSDK()
-
   }
 
   /**
@@ -52,7 +54,7 @@ export class MagicConnectConnector extends MagicConnector {
    */
   getMagicSDK() {
     const { apiKey, magicSdkConfiguration, networks } = this.options
-    if(typeof window === 'undefined'){
+    if (typeof window === 'undefined') {
       return null
     }
     if (this.magic) return this.magic
@@ -73,8 +75,7 @@ export class MagicConnectConnector extends MagicConnector {
     const provider = await this.getProvider()
     const chainId = await this.getChainId()
 
-    provider &&
-    this.registerProviderEventListeners(provider)
+    provider && this.registerProviderEventListeners(provider)
 
     const account = await this.getAccount()
 
