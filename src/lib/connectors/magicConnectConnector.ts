@@ -1,79 +1,92 @@
-import { Magic } from 'magic-sdk'
+import { ConnectExtension } from '@magic-ext/connect'
 import {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
+  MagicSDKExtensionsOption,
   SDKBase,
 } from '@magic-sdk/provider'
-import { EthNetworkConfiguration } from '@magic-sdk/types'
-import { ConnectExtension } from '@magic-ext/connect'
-import { Address, Chain, Connector } from '@wagmi/core'
 import { RPCProviderModule } from '@magic-sdk/provider/dist/types/modules/rpc-provider'
-import { UserRejectedRequestError } from 'viem'
+import { EthNetworkConfiguration } from '@magic-sdk/types'
+import { Chain } from '@wagmi/core'
+import { Magic } from 'magic-sdk'
+import { normalizeChainId } from '../utils'
+import { MagicConnector } from './magicConnector'
 
-// Define the interface for MagicConnector options
 export interface MagicConnectorOptions {
   apiKey: string
   magicSdkConfiguration?: MagicSDKAdditionalConfiguration
   networks?: EthNetworkConfiguration[]
 }
 
-// MagicConnectConnector class extends the base wagmi Connector class
-export class MagicConnectConnector extends Connector<
-  any,
-  MagicConnectorOptions
-> {
-  readonly id = 'magic'
-  readonly name = 'Magic'
-  readonly ready = true
-  provider: RPCProviderModule
-  magic: InstanceWithExtensions<SDKBase, ConnectExtension[]>
+/**
+ * Magic Connect Connector class used to connect to wallet using Magic Connect modal
+ * This uses the modal UI from Magic itself and styles for it can be configured using
+ * magic dashboard.
+ *
+ * @example
+ * ```typescript
+ * import { MagicConnectConnector } from '@everipedia/wagmi-magic-connector';
+ * const connector = new MagicConnectConnector({
+ *  options: {
+ *     apiKey: YOUR_MAGIC_LINK_API_KEY, //required
+ *    //...Other options
+ *  },
+ * });
+ * ```
+ * @see https://github.com/EveripediaNetwork/wagmi-magic-connector#-usage
+ * @see https://magic.link/docs/connect/overview
+ */
 
-  // Constructor initializes the Magic instance
-  // allows connectUI modal to display faster when connect method is called
+export class MagicConnectConnector extends MagicConnector {
+  magic: InstanceWithExtensions<SDKBase, MagicSDKExtensionsOption<string>>
+
   constructor(config: { chains?: Chain[]; options: MagicConnectorOptions }) {
     super(config)
-    this.initializeMagicInstance()
+    this.magic = this.getMagicSDK()
   }
 
-  // Private method to initialize the Magic instance
-  private initializeMagicInstance() {
+  /**
+   * Get the Magic Instance
+   * @throws {Error} if Magic API Key is not provided
+   */
+  getMagicSDK() {
     const { apiKey, magicSdkConfiguration, networks } = this.options
-    if (typeof window !== 'undefined') {
-      this.magic = new Magic(apiKey, {
-        ...magicSdkConfiguration,
-        network: magicSdkConfiguration?.network || networks?.[0],
-        extensions: [new ConnectExtension()],
-      })
-
-      this.provider = this.magic.rpcProvider
-    }
+    if (this.magic) return this.magic
+    this.magic = new Magic(apiKey, {
+      ...magicSdkConfiguration,
+      network: magicSdkConfiguration?.network || networks?.[0],
+      extensions: [new ConnectExtension()],
+    })
+    return this.magic
   }
 
-  // Connect method attempts to connects to wallet using Magic Connect modal
+  /**
+   * Connect method attempts to connects to wallet using Magic Connect modal
+   * this will open a modal for the user to select their wallet
+   */
   async connect() {
-    try {
-      await this.magic.wallet.connectWithUI()
-      const provider = await this.getProvider()
-      const chainId = await this.getChainId()
+    await this.magic.wallet.connectWithUI()
+    const provider = await this.getProvider()
+    const chainId = await this.getChainId()
 
-      this.registerProviderEventListeners(provider)
+    this.registerProviderEventListeners(provider)
 
-      const account = await this.getAccount()
+    const account = await this.getAccount()
 
-      return {
-        account,
-        chain: {
-          id: chainId,
-          unsupported: false,
-        },
-        provider,
-      }
-    } catch (error) {
-      throw new UserRejectedRequestError(error)
+    return {
+      account,
+      chain: {
+        id: chainId,
+        unsupported: false,
+      },
+      provider,
     }
   }
 
-  // Private method to register event listeners for the provider
+  /**
+   * Provider events to run methods on various events
+   * on user session
+   */
   private registerProviderEventListeners(provider: RPCProviderModule) {
     if (provider.on) {
       provider.on('accountsChanged', this.onAccountsChanged)
@@ -82,55 +95,9 @@ export class MagicConnectConnector extends Connector<
     }
   }
 
-  // Disconnect method attempts to disconnect wallet from Magic
-  async disconnect(): Promise<void> {
-    try {
-      await this.magic.wallet.disconnect()
-      this.emit('disconnect')
-    } catch (error) {
-      console.error('Error disconnecting from Magic SDK:', error)
-    }
-  }
-
-  // Get connected wallet address
-  async getAccount(): Promise<Address> {
-    const signer = await this.getSigner()
-    const account = await signer.getAddress()
-    return getAddress(account)
-  }
-
-  // Get chain ID
-  async getChainId(): Promise<number> {
-    if (this.provider) {
-      const chainId = await this.provider.request({
-        method: 'eth_chainId',
-        params: [],
-      })
-      return normalizeChainId(chainId)
-    }
-    const networkOptions = this.options.magicSdkConfiguration?.network
-    if (typeof networkOptions === 'object') {
-      const chainID = networkOptions.chainId
-      if (chainID) return normalizeChainId(chainID)
-    }
-    throw new Error('Chain ID is not defined')
-  }
-
-  // Get the Magic Instance provider
-  async getProvider() {
-    if (!this.provider) {
-      this.provider = this.magic.rpcProvider
-    }
-    return this.provider
-  }
-
-  // Get the Magic Instance signer
-  async getSigner(): Promise<Signer> {
-    const provider = new ethers.providers.Web3Provider(await this.getProvider())
-    return provider.getSigner()
-  }
-
-  // Autoconnect if account is available
+  /**
+   * checks if user is authorized with Magic Connect
+   */
   async isAuthorized() {
     try {
       const walletInfo = await this.magic.wallet.getInfo()
@@ -140,45 +107,39 @@ export class MagicConnectConnector extends Connector<
     }
   }
 
-  // Event handler for accountsChanged event
-  onAccountsChanged = (accounts: string[]): void => {
-    if (accounts.length === 0) this.emit('disconnect')
-    else this.emit('change', { account: getAddress(accounts[0]) })
-  }
-
-  // Event handler for chainChanged event
-  onChainChanged = (chainId: string | number): void => {
-    const id = normalizeChainId(chainId)
-    const unsupported = this.isChainUnsupported(id)
-    this.emit('change', { chain: { id, unsupported } })
-  }
-
-  // Event handler for disconnect event
-  onDisconnect = (): void => {
-    this.emit('disconnect')
-  }
-
+  /**
+   * method that switches chains given a chainId.
+   * This only works when user provides multiple networks in options
+   * @param chainId
+   * @throws {Error} if chainId is not supported
+   */
   async switchChain(chainId: number): Promise<Chain> {
-    if (!this.options.networks)
+    if (!this.options.networks) {
       throw new Error(
         'switch chain not supported: please provide networks in options',
       )
+    }
+
     const normalizedChainId = normalizeChainId(chainId)
     const chain = this.chains.find((x) => x.id === normalizedChainId)
     if (!chain) throw new Error(`Unsupported chainId: ${chainId}`)
-    const network = this.options.networks.find((x) =>
-      typeof x === 'object'
-        ? normalizeChainId(x.chainId) === normalizedChainId
-        : normalizeChainId(x) === normalizedChainId,
+
+    const network = this.options.networks.find(
+      (x: string | { chainId: string }) =>
+        typeof x === 'object' && x.chainId
+          ? normalizeChainId(x.chainId) === normalizedChainId
+          : normalizeChainId(x as string) === normalizedChainId,
     )
+
     if (!network) throw new Error(`Unsupported chainId: ${chainId}`)
 
     const account = await this.getAccount()
+    const provider = await this.getProvider()
 
-    if (this.provider.off) {
-      this.provider.off('accountsChanged', this.onAccountsChanged)
-      this.provider.off('chainChanged', this.onChainChanged)
-      this.provider.off('disconnect', this.onDisconnect)
+    if (provider.off) {
+      provider.off('accountsChanged', this.onAccountsChanged)
+      provider.off('chainChanged', this.onChainChanged)
+      provider.off('disconnect', this.onDisconnect)
     }
 
     this.magic = new Magic(this.options.apiKey, {
@@ -187,11 +148,8 @@ export class MagicConnectConnector extends Connector<
       extensions: [new ConnectExtension()],
     })
 
-    this.provider = this.magic.rpcProvider
-    this.registerProviderEventListeners(this.provider)
-
+    this.registerProviderEventListeners(this.magic.rpcProvider)
     this.onChainChanged(chain.id)
-
     this.onAccountsChanged([account])
 
     return chain
