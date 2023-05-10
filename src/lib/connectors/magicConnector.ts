@@ -1,9 +1,11 @@
-import { OAuthExtension, OAuthProvider } from '@magic-ext/oauth'
-import { InstanceWithExtensions, SDKBase } from '@magic-sdk/provider'
+import { OAuthExtension } from '@magic-ext/oauth'
+import {
+  InstanceWithExtensions,
+  MagicSDKExtensionsOption,
+  SDKBase,
+} from '@magic-sdk/provider'
 import { Chain, Connector } from '@wagmi/core'
-
 import { createWalletClient, custom, getAddress } from 'viem'
-import { createModal } from '../modal/view'
 import { normalizeChainId } from '../utils'
 
 const IS_SERVER = typeof window === 'undefined'
@@ -16,22 +18,21 @@ export interface MagicOptions {
   customHeaderText?: string
 }
 
-interface UserDetails {
-  email: string
-  phoneNumber: string
-  oauthProvider: OAuthProvider
-}
-
+/**
+ * Magic Connector class is a base class for Magic Auth and Magic Connect Connectors
+ * It implements the common functionality of both the connectors
+ *
+ * Magic Auth Connector and Magic Connect Connector are the two connectors provided by this library
+ * And both of them extend this class.
+ */
 export abstract class MagicConnector extends Connector {
   ready = !IS_SERVER
   readonly id = 'magic'
   readonly name = 'Magic'
   isModalOpen = false
-  magicOptions: MagicOptions
 
   protected constructor(config: { chains?: Chain[]; options: MagicOptions }) {
     super(config)
-    this.magicOptions = config.options
   }
 
   async getAccount() {
@@ -41,25 +42,6 @@ export abstract class MagicConnector extends Connector {
     })
     const account = getAddress(accounts[0] as string)
     return account
-  }
-
-  async getUserDetailsByForm(
-    enableSMSLogin: boolean,
-    enableEmailLogin: boolean,
-    oauthProviders: OAuthProvider[],
-  ): Promise<UserDetails> {
-    const output: UserDetails = (await createModal({
-      accentColor: this.magicOptions.accentColor,
-      isDarkMode: this.magicOptions.isDarkMode,
-      customLogo: this.magicOptions.customLogo,
-      customHeaderText: this.magicOptions.customHeaderText,
-      enableSMSLogin: enableSMSLogin,
-      enableEmailLogin: enableEmailLogin || true,
-      oauthProviders,
-    })) as UserDetails
-
-    this.isModalOpen = false
-    return output
   }
 
   async getWalletClient({ chainId }: { chainId?: number } = {}) {
@@ -79,20 +61,6 @@ export abstract class MagicConnector extends Connector {
     return magic.rpcProvider
   }
 
-  async isAuthorized() {
-    try {
-      const magic = this.getMagicSDK()
-
-      const isLoggedIn = await magic.user.isLoggedIn()
-      if (isLoggedIn) return true
-
-      const result = await magic.oauth.getRedirectResult()
-      return result !== null
-    } catch {
-      return false
-    }
-  }
-
   protected onAccountsChanged(accounts: string[]): void {
     if (accounts.length === 0 || !accounts[0]) this.emit('disconnect')
     else this.emit('change', { account: getAddress(accounts[0]) })
@@ -104,14 +72,38 @@ export abstract class MagicConnector extends Connector {
     this.emit('change', { chain: { id, unsupported } })
   }
 
+  async getChainId(): Promise<number> {
+    const provider = await this.getProvider()
+    if (provider) {
+      const chainId = await provider.request({
+        method: 'eth_chainId',
+        params: [],
+      })
+      return normalizeChainId(chainId)
+    }
+    const networkOptions = this.options.magicSdkConfiguration?.network
+    if (typeof networkOptions === 'object') {
+      const chainID = networkOptions.chainId
+      if (chainID) return normalizeChainId(chainID)
+    }
+    throw new Error('Chain ID is not defined')
+  }
+
   protected onDisconnect(): void {
     this.emit('disconnect')
   }
 
   async disconnect(): Promise<void> {
-    const magic = this.getMagicSDK()
-    await magic.user.logout()
+    try {
+      const magic = this.getMagicSDK()
+      await magic.wallet.disconnect()
+      this.emit('disconnect')
+    } catch (error) {
+      console.error('Error disconnecting from Magic SDK:', error)
+    }
   }
 
-  abstract getMagicSDK(): InstanceWithExtensions<SDKBase, OAuthExtension[]>
+  abstract getMagicSDK():
+    | InstanceWithExtensions<SDKBase, OAuthExtension[]>
+    | InstanceWithExtensions<SDKBase, MagicSDKExtensionsOption<string>>
 }
