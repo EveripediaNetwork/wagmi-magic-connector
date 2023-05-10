@@ -26,6 +26,7 @@
   - [🎨 Modal Customization](#-modal-customization)
 - [📚 Additional Resources](#-additional-resources)
   - [Usage with Rainbowkit](#usage-with-rainbowkit)
+  - [Example Repositories](#example-repositories)
 
 # ⬇️ Install
 
