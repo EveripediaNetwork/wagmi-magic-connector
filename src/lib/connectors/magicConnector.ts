@@ -33,8 +33,10 @@ export abstract class MagicConnector extends Connector {
 
   protected constructor(config: { chains?: Chain[]; options: MagicOptions }) {
     super(config)
-    if(!config.options.apiKey){
-      throw new Error(`Magic API Key is required. Get one at https://dashboard.magic.link/`)
+    if (!config.options.apiKey) {
+      throw new Error(
+        'Magic API Key is required. Get one at https://dashboard.magic.link/',
+      )
     }
   }
 
