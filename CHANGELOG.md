@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 1.0.2
+
+### Patch Changes
+
+- 6e648bb: Adds post processing to build to fix bundling issues
+
 ## 1.0.1
 
 ### Patch Changes
