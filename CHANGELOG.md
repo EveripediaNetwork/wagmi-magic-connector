@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 1.0.1
+
+### Patch Changes
+
+- eb25ae1: Makes package es module from package json type
+
 ## 1.0.0
 
 ### Major Changes
