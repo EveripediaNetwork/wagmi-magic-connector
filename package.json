@@ -1,5 +1,5 @@
 {
-  "name": "@magic-labs/wagmi-connector",
+  "name": "@magiclabs/wagmi-connector",
   "version": "1.0.2",
   "description": "wagmi connector to connect with Magic SDK",
   "main": "dist/index.js",
