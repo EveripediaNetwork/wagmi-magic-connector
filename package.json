@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
-  "repository": "https://github.com/EveripediaNetwork/wagmi-magic-connector",
+  "repository": "https://github.com/magiclabs/wagmi-magic-connector",
   "license": "MIT",
   "keywords": [
     "wagmi",
