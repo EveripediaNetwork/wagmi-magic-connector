@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 1.1.0
+
+### Minor Changes
+
+- Moves package ownership to @magiclabs and adds @everipedianetwork as maintainers
+
 ## 1.0.2
 
 ### Patch Changes
