@@ -1,16 +1,16 @@
 # WAGMI Magic Connector
 
-![](https://flat.badgen.net/github/release/EveripediaNetwork/wagmi-magic-connector) ![](http://flat.badgen.net/github/tag/EveripediaNetwork/wagmi-magic-connector) ![](http://flat.badgen.net/github/open-issues/EveripediaNetwork/wagmi-magic-connector) ![](http://flat.badgen.net/npm/dt/@everipedia/wagmi-magic-connector) ![](http://flat.badgen.net/packagephobia/publish/@everipedia/wagmi-magic-connector) ![](http://flat.badgen.net/github/stars/EveripediaNetwork/wagmi-magic-connector)
-
 [WAGMI](https://wagmi.sh/) Connector to connect with [Magic](https://magic.link/). Magic is a developer SDK that you can integrate into your application to enable passwordless authentication using magic links, OTPs, OAuth from third-party services, and more for your web3 App.
+
+Special thanks for the [Everipedia](https://github.com/EveripediaNetwork) team for creating the connector and working with us for ongoing support and maintenance.
 
 ![Frame 184 (4)](https://user-images.githubusercontent.com/52039218/174133833-fc63f237-63bf-4134-a22b-ce77ae0f2a9b.png)
 
-
-
 # Table of Contents
 
-- [⬇️ Install](#%EF%B8%8F-install)
+- [WAGMI Magic Connector](#wagmi-magic-connector)
+- [Table of Contents](#table-of-contents)
+- [⬇️ Install](#️-install)
 - [🔎 Package TL;DR](#-package-tldr)
 - [⭐ Usage](#-usage)
 - [📖 API](#-api)
@@ -25,19 +25,19 @@
   - [📧 Disable Email Authentication](#-disable-email-authentication)
   - [🎨 Modal Customization](#-modal-customization)
 - [📚 Additional Resources](#-additional-resources)
-  - [Usage with Rainbowkit](#usage-with-rainbowkit)
-  - [Example Repositories](#example-repositories)
+  - [Usage with RainbowKit](#usage-with-rainbowkit)
+  - [**Example repositories:**](#example-repositories)
 
 # ⬇️ Install
 
 ```bash
-npm install @everipedia/wagmi-magic-connector
+npm install @magiclabs/wagmi-connector
 ```
 
 or
 
 ```bash
-yarn add @everipedia/wagmi-magic-connector
+yarn add @magiclabs/wagmi-connector
 ```
 
 # 🔎 Package TL;DR
@@ -54,7 +54,7 @@ product. It can be used to assign a read-write wallet to your user.
 # ⭐ Usage
 
 ```javascript
-import { MagicAuthConnector, MagicConnectConnector } from '@everipedia/wagmi-magic-connector';
+import { MagicAuthConnector, MagicConnectConnector } from '@magiclabs/wagmi-connector';
 
 // Magic Auth integration
 const connector = new MagicAuthConnector({
@@ -185,7 +185,7 @@ const connector = new MagicAuthConnector({
 You can customize the modal's theme, default accent color, logo and header text.
 
 ```javascript
-import { MagicAuthConnector } from '@everipedia/wagmi-magic-connector';
+import { MagicAuthConnector } from '@magiclabs/wagmi-connector';
 
 const connector = new MagicAuthConnector({
   options: {
@@ -210,7 +210,7 @@ To use the connector with Rainbow kit, create a new file `RainbowMagicConnector.
 ```javascript
 // RainbowMagicConnector.ts
 
-import { MagicConnectConnector } from '@everipedia/wagmi-magic-connector';
+import { MagicConnectConnector } from '@magiclabs/wagmi-connector';
 
 export const rainbowMagicConnector = ({ chains }: any) => ({
   id: 'magic',
