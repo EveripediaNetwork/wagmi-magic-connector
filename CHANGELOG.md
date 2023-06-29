@@ -1,4 +1,4 @@
-# @everipedia/wagmi-magic-connector
+# @magiclabs/wagmi-magic-connector
 
 ## 1.1.0
 

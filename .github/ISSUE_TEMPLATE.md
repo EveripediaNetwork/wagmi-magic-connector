@@ -11,5 +11,5 @@
 - **[StackBlitz](https://stackblitz.com/) reproduction link** (If applicable)
 
 - **Version** (e.g. 1.0.0)
-  - @everipedia/wagmi-magic-connector version:
+  - @magiclabs/wagmi-connector version:
   - wagmi version:

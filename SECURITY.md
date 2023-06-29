@@ -10,4 +10,4 @@
 
 ## Reporting a Vulnerability
 
-Create a Issue at https://github.com/EveripediaNetwork/wagmi-magic-connector/issues or Pull Request at https://github.com/EveripediaNetwork/wagmi-magic-connector/pulls describing the vulnerablility, we will take action as soon as possible.
+Create a Issue at https://github.com/magiclabs/wagmi-magic-connector/issues or Pull Request at https://github.com/magiclabs/wagmi-magic-connector/pulls describing the vulnerablility, we will take action as soon as possible.
