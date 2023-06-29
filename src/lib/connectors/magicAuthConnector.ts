@@ -37,7 +37,7 @@ interface MagicAuthOptions extends MagicOptions {
  *
  * @example
  * ```typescript
- * import { MagicConnectConnector } from '@everipedia/wagmi-magic-connector';
+ * import { MagicConnectConnector } from '@magiclabs/wagmi-connector';
  * const connector = new MagicConnectConnector({
  *  options: {
  *     apiKey: YOUR_MAGIC_LINK_API_KEY, //required
@@ -45,7 +45,7 @@ interface MagicAuthOptions extends MagicOptions {
  *  },
  * });
  * ```
- * @see https://github.com/EveripediaNetwork/wagmi-magic-connector#-usage
+ * @see https://github.com/magiclabs/wagmi-magic-connector#-usage
  * @see https://magic.link/docs/connect/overview
  */
 
