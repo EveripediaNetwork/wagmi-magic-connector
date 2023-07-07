@@ -1,4 +1,3 @@
-import { ConnectExtension } from '@magic-ext/connect'
 import type {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
@@ -61,7 +60,6 @@ export class MagicConnectConnector extends MagicConnector {
     this.magic = new Magic(apiKey, {
       ...magicSdkConfiguration,
       network: magicSdkConfiguration?.network || networks?.[0],
-      extensions: [new ConnectExtension()],
     })
     return this.magic
   }
@@ -151,7 +149,6 @@ export class MagicConnectConnector extends MagicConnector {
     this.magic = new Magic(this.options.apiKey, {
       ...this.options.magicSdkConfiguration,
       network: network,
-      extensions: [new ConnectExtension()],
     })
 
     this.registerProviderEventListeners(this.magic.rpcProvider)

@@ -4,7 +4,7 @@ import type {
   MagicSDKExtensionsOption,
   SDKBase,
 } from '@magic-sdk/provider'
-import { Chain, Connector } from '@wagmi/core'
+import { Chain, Connector, createStorage } from '@wagmi/core'
 import { createWalletClient, custom, getAddress } from 'viem'
 import { normalizeChainId } from '../utils'
 
