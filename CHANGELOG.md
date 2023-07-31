@@ -1,5 +1,11 @@
 # @everipedia/wagmi-magic-connector
 
+## 2.0.0
+
+### Major Changes
+
+- c90260a: We moved package to @magiclabs/wagmi-connector ! Please switch to continue receiving updates
+
 ## 1.0.2
 
 ### Patch Changes
