@@ -1,6 +1,7 @@
+> 🚧 **DEPRECATION NOTICE:** We are moving this project to a new repository under magiclabs ! Please follow the new repository for future updates: https://github.com/magiclabs/wagmi-magic-connector
+
 # WAGMI Magic Connector
 
-> 🚧 **DEPRECATION NOTICE:** We are moving this project to a new repository under magiclabs ! Please follow the new repository for future updates: https://github.com/magiclabs/wagmi-magic-connector
 
 ![](https://flat.badgen.net/github/release/EveripediaNetwork/wagmi-magic-connector) ![](http://flat.badgen.net/github/tag/EveripediaNetwork/wagmi-magic-connector) ![](http://flat.badgen.net/github/open-issues/EveripediaNetwork/wagmi-magic-connector) ![](http://flat.badgen.net/npm/dt/@everipedia/wagmi-magic-connector) ![](http://flat.badgen.net/packagephobia/publish/@everipedia/wagmi-magic-connector) ![](http://flat.badgen.net/github/stars/EveripediaNetwork/wagmi-magic-connector)
 
